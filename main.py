@@ -133,8 +133,11 @@ if services.__contains__('plex'):
     print('If you have a PleX claim token, enter it now. Otherwise, just press enter.', end=' ')
     plex_claim = input()
 
-print('Where would you like to keep your files?', end=' ')
-root_dir = take_directory_input()
+print('Where would you like to keep your ssd app files?', end=' ')
+root_dir_ssd = take_directory_input()
+
+print('Where would you like to keep your hhd media/download files?', end=' ')
+root_dir_hdd = take_directory_input()
 
 compose = open('docker-compose.yml', 'w')
 compose.write(
@@ -142,7 +145,7 @@ compose.write(
     'services:\n'
 )
 
-container_config = ContainerConfig(root_dir, timezone, plex_claim=plex_claim)
+container_config = ContainerConfig(root_dir_ssd, root_dir_hdd, timezone, plex_claim=plex_claim)
 
 for service in services:
     compose.write(getattr(container_config, service)())
@@ -151,11 +154,22 @@ print("Docker compose file generated successfully.")
 
 print("Do you want to also generate the required folder structure and permissions? (this is required for first time setup) [Y/n]: ")
 generate_permissions = take_boolean_input()
+
 if generate_permissions:
-    permission_setup = UserGroupSetup(root_dir=root_dir)
+    # Create permission setup objects for both directories
+    permission_setup_ssd = UserGroupSetup(root_dir=root_dir_ssd)
+    permission_setup_hdd = UserGroupSetup(root_dir=root_dir_hdd)
+    
     for service in services:
         try:
-            getattr(permission_setup, service)()
+            # Execute permission setup for SSD directory
+            getattr(permission_setup_ssd, service)()
+        except AttributeError:
+            pass
+        
+        try:
+            # Execute permission setup for HDD directory
+            getattr(permission_setup_hdd, service)()
         except AttributeError:
             pass
 else:

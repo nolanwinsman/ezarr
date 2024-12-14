@@ -2,21 +2,23 @@ import os
 
 class ContainerConfig:
     def __init__(self,
-                 root_dir,
+                 root_dir_ssd,
+                 root_dir_hdd,
                  timezone,
                  plex_claim='',
                  ):
-        self.root_dir = root_dir
+        self.root_dir_ssd = root_dir_ssd
+        self.root_dir_hdd = root_dir_hdd
         self.timezone = timezone
-        self.config_dir = root_dir + '/config'
+        self.config_dir = root_dir_ssd + '/config'
         self.plex_claim = plex_claim
-        self.movie_dir = root_dir + '/media/movies'
-        self.tv_dir = root_dir + '/media/tv'
-        self.music_dir = root_dir + '/media/music'
-        self.book_dir = root_dir + '/media/books'
-        self.comic_dir = root_dir + '/media/comics'
-        self.torrent_dir = root_dir + '/data/torrents'
-        self.usenet_dir = root_dir + '/data/usenet'
+        self.movie_dir = root_dir_hdd + '/media/movies'
+        self.tv_dir = root_dir_hdd + '/media/tv'
+        self.music_dir = root_dir_hdd + '/media/music'
+        self.book_dir = root_dir_hdd + '/media/books'
+        self.comic_dir = root_dir_hdd + '/media/comics'
+        self.torrent_dir = root_dir_hdd + '/data/torrents'
+        self.usenet_dir = root_dir_hdd + '/data/usenet'
         self.UID = os.popen('id -u').read().rstrip('\n')
 
     def plex(self):
@@ -32,7 +34,7 @@ class ContainerConfig:
             '      - PLEX_CLAIM=' + self.plex_claim + '\n'
             '    volumes:\n'
             '      - ' + self.config_dir + '/plex-config:/config\n'
-            '      - ' + self.root_dir + '/data/media:/media\n'
+            '      - ' + self.root_dir_hdd + '/data/media:/media\n'
             '    restart: unless-stopped\n\n'
         )
 
@@ -66,7 +68,7 @@ class ContainerConfig:
             '      - TZ=' + self.timezone + '\n'
             '    volumes:\n'
             '      - ' + self.config_dir + '/jellyfin-config:/config\n'
-            '      - ' + self.root_dir + '/data/media:/data\n'
+            '      - ' + self.root_dir_hdd + '/data/media:/data\n'
             '    ports:\n'
             '      - "8096:8096"\n'
             '    restart: unless-stopped\n\n'
@@ -84,7 +86,7 @@ class ContainerConfig:
             '      - TZ=' + self.timezone + '\n'
             '    volumes:\n'
             '      - ' + self.config_dir + '/sonarr-config:/config\n'
-            '      - ' + self.root_dir + '/data:/data\n'
+            '      - ' + self.root_dir_hdd + '/data:/data\n'
             '    ports:\n'
             '      - "8989:8989"\n'
             '    restart: unless-stopped\n\n'
@@ -102,7 +104,7 @@ class ContainerConfig:
             '      - TZ=' + self.timezone + '\n'
             '    volumes:\n'
             '      - ' + self.config_dir + '/radarr-config:/config\n'
-            '      - ' + self.root_dir + '/data:/data\n'
+            '      - ' + self.root_dir_hdd + '/data:/data\n'
             '    ports:\n'
             '      - "7878:7878"\n'
             '    restart: unless-stopped\n\n'
@@ -119,7 +121,7 @@ class ContainerConfig:
             '      - TZ=' + self.timezone + '\n'
             '    volumes:\n'
             '      - ' + self.config_dir + '/bazarr-config:/config\n'
-            '      - ' + self.root_dir + '/data/media:/media\n'
+            '      - ' + self.root_dir_hdd + '/data/media:/media\n'
             '    ports:\n'
             '      - "6767:6767"\n'
             '    restart: unless-stopped\n\n'
@@ -137,7 +139,7 @@ class ContainerConfig:
             '      - TZ=' + self.timezone + '\n'
             '    volumes:\n'
             '      - ' + self.config_dir + '/lidarr-config:/config\n'
-            '      - ' + self.root_dir + '/data:/data\n'
+            '      - ' + self.root_dir_hdd + '/data:/data\n'
             '    ports:\n'
             '      - "8686:8686"\n'
             '    restart: unless-stopped\n\n'
@@ -155,7 +157,7 @@ class ContainerConfig:
             '      - TZ=' + self.timezone + '\n'
             '    volumes:\n'
             '      - ' + self.config_dir + '/readarr-config:/config\n'
-            '      - ' + self.root_dir + '/data:/data\n'
+            '      - ' + self.root_dir_hdd + '/data:/data\n'
             '    ports:\n'
             '      - "8787:8787"\n'
             '    restart: unless-stopped\n\n'
@@ -172,7 +174,7 @@ class ContainerConfig:
             '      - UMASK=002\n'
             '    volumes:\n'
             '      - ' + self.config_dir + '/mylar-config:/config\n'
-            '      - ' + self.root_dir + '/data:/data\n'
+            '      - ' + self.root_dir_hdd + '/data:/data\n'
             '    ports:\n'
             '      - "8090:8090"\n'
             '    restart: unless-stopped\n\n'
@@ -188,9 +190,9 @@ class ContainerConfig:
             '      - TZ=' + self.timezone + '\n'
             '    volumes:\n'
             '      - ' + self.config_dir + '/audiobookshelf:/config\n'
-            '      - ' + self.root_dir + '/data/media/audiobooks:/audiobooks\n'
-            '      - ' + self.root_dir + '/data/media/podcasts:/podcasts\n'
-            '      - ' + self.root_dir + '/data/media/audiobookshelf-metadata:/metadata\n'
+            '      - ' + self.root_dir_hdd + '/data/media/audiobooks:/audiobooks\n'
+            '      - ' + self.root_dir_hdd + '/data/media/podcasts:/podcasts\n'
+            '      - ' + self.root_dir_hdd + '/data/media/audiobookshelf-metadata:/metadata\n'
             '    ports:\n'
             '      - "13378:80"\n'
             '    restart: unless-stopped\n\n'

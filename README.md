@@ -10,6 +10,8 @@ This fork introduces changes to the **Python script only**, allowing support for
 ### What Changed?
 
 - **Python Script**: Modified to prompt for and handle two root directories during execution. 
+- **Python Script**: Now creates an `anime_movies`, `cartoon_movies`, and `documentaries` folder with exact same permissions as the `movies` folder
+- **Python Script**: Now creates an `anime`, and `cartoons` folder with exact same permissions as the `tv` folder
 - **Shell Scripts**: No changes were made to the shell scripts, preserving compatibility with the original repository.
 
 ### Usage

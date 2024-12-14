@@ -24,7 +24,9 @@ class UserGroupSetup:
         os.system(
             '/bin/bash -c "sudo useradd sonarr -u 13001'
             ' ; sudo mkdir -pv ' + self.root_dir_hdd + '/data/{media,usenet,torrents}/tv -m 775'
-            ' ; sudo chown -R sonarr:mediacenter ' + self.root_dir_hdd + '/data/{media,usenet,torrents}/tv"'
+            ' ; sudo mkdir -pv ' + self.root_dir_hdd + '/data/{media,usenet,torrents}/{anime,cartoons} -m 775'
+            ' ; sudo chown -R sonarr:mediacenter ' + self.root_dir_hdd + '/data/{media,usenet,torrents}/tv'
+            ' ; sudo chown -R sonarr:mediacenter ' + self.root_dir_hdd + '/data/{media,usenet,torrents}/{anime,cartoons}"'
         )
         self.create_config_dir('sonarr')
         os.system('sudo usermod -a -G mediacenter sonarr')
@@ -33,7 +35,9 @@ class UserGroupSetup:
         os.system(
             '/bin/bash -c "sudo useradd radarr -u 13002'
             ' ; sudo mkdir -pv ' + self.root_dir_hdd + '/data/{media,usenet,torrents}/movies -m 775'
-            ' ; sudo chown -R radarr:mediacenter ' + self.root_dir_hdd + '/data/{media,usenet,torrents}/movies"'
+            ' ; sudo mkdir -pv ' + self.root_dir_hdd + '/data/{media,usenet,torrents}/{anime_movies,cartoon_movies} -m 775'
+            ' ; sudo chown -R radarr:mediacenter ' + self.root_dir_hdd + '/data/{media,usenet,torrents}/movies'
+            ' ; sudo chown -R radarr:mediacenter ' + self.root_dir_hdd + '/data/{media,usenet,torrents}/{anime_movies,cartoon_movies}"'
         )
         self.create_config_dir('radarr')
         os.system('sudo usermod -a -G mediacenter radarr')

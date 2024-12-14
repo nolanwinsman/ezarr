@@ -156,22 +156,15 @@ print("Do you want to also generate the required folder structure and permission
 generate_permissions = take_boolean_input()
 
 if generate_permissions:
-    # Create permission setup objects for both directories
-    permission_setup_ssd = UserGroupSetup(root_dir=root_dir_ssd)
-    permission_setup_hdd = UserGroupSetup(root_dir=root_dir_hdd)
+    # Create a permission setup object with both SSD and HDD directories
+    permission_setup = UserGroupSetup(root_dir_ssd=root_dir_ssd, root_dir_hdd=root_dir_hdd)
     
     for service in services:
         try:
-            # Execute permission setup for SSD directory
-            getattr(permission_setup_ssd, service)()
+            # Execute permission setup for the specified service
+            getattr(permission_setup, service)()
         except AttributeError:
-            pass
-        
-        try:
-            # Execute permission setup for HDD directory
-            getattr(permission_setup_hdd, service)()
-        except AttributeError:
-            pass
+            print(f"Warning: Service '{service}' does not have a defined setup method. Skipping...")
 else:
     print("Permission and folder structure generation skipped by user.")
 

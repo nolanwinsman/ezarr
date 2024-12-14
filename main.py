@@ -120,13 +120,13 @@ if len(services) == 0:
 
 print('\n===CONFIGURATION===')
 
-print('Please enter your timezone (like "Europe/Amsterdam") or press enter to use your system\'s configured timezone:', end=' ')
+print('Please enter your timezone (like "America/Denver") or press enter to use your system\'s configured timezone:', end=' ')
 timezone = input()
 if (timezone == ''):
     timezone = get_system_timezone()
 
 if len(timezone) == 0: # if user pressed enter and reading timezone from /etc/localtime failed then default to Amsterdam
-    timezone = 'Europe/Amsterdam'
+    timezone = 'America/Denver'
 
 plex_claim = ''
 if services.__contains__('plex'):

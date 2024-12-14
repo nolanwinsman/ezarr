@@ -248,7 +248,7 @@ class ContainerConfig:
             '      - net.ipv6.conf.all.disable_ipv6=1\n'
             '    volumes:\n'
             '      - ' + self.config_dir + '/qbittorrent:/config\n'
-            '      - ' + self.torrent_dir + ':/data/torrents\n\n'
+            '      - ' + self.torrent_dir + ':/data/torrents\n\n' # set qbittorrent 'Default Save Path' to /data/torrents in WebUI
     )
     
 

@@ -1,3 +1,25 @@
+## Modifications for Dual Root Directories
+
+### Overview
+
+This fork introduces changes to the **Python script only**, allowing support for two root directories. The shell scripts remain untouched and function as in the original repository. The modified Python script now lets you specify:
+
+- **SSD Directory**: For storing configuration files and app data.
+- **HDD Directory**: For mass storage such as media and downloads.
+
+### What Changed?
+
+- **Python Script**: Modified to prompt for and handle two root directories during execution. 
+- **Shell Scripts**: No changes were made to the shell scripts, preserving compatibility with the original repository.
+
+### Usage
+
+When running the modified Python script, you will now specify:
+
+1. **SSD Directory**: A directory on your SSD for storing app configurations and files requiring faster access.
+2. **HDD Directory**: A directory on your HDD pool for larger files like media or downloads.
+
+
 # EZARR
 [![Check running](https://github.com/Luctia/ezarr/actions/workflows/check_running.yml/badge.svg)](https://github.com/Luctia/ezarr/actions/workflows/check_running.yml)
 

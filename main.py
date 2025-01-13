@@ -10,7 +10,7 @@ ALL_YES = False
 def take_boolean_input(default=True):
     if ALL_YES:
         return True
-        
+
     while True:
         ans = input()
         if ans == '':
@@ -51,7 +51,7 @@ print('This CLI will ask you which services you\'d like to use and more. If you\
       'certain service, look in the README.')
 
 print('Default YES to everything? [Y/n]', end=" ")
-ALL_YES = take_boolean_input(default=True):
+ALL_YES = take_boolean_input()
 
 print('\n===SERVARR===')
 services_classed['servarr'] = []

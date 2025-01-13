@@ -24,10 +24,11 @@ class UserGroupSetup:
         os.system(
             '/bin/bash -c "sudo useradd sonarr -u 13001'
             ' ; sudo mkdir -pv ' + self.root_dir_hdd + '/data/{media,usenet,torrents}/{anime,cartoons,tv} -m 775'
-            ' ; sudo chown -R sonarr:mediacenter ' + self.root_dir_hdd + '/data/{media,usenet,torrents}/{anime,cartoons,tv}'
+            ' ; sudo chown -R sonarr:mediacenter ' + self.root_dir_hdd + '/data/{media,usenet,torrents}/{anime,cartoons,tv}"'
         )
         self.create_config_dir('sonarr')
         os.system('sudo usermod -a -G mediacenter sonarr')
+
 
     def radarr(self):
         os.system(

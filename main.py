@@ -86,6 +86,8 @@ take_input('plex', 'ms')
 if services_classed['ms'].__contains__('plex'):
     print('Use Tautulli? [Y/n]', end=" ")
     take_input('tautulli', 'ms')
+    print('Use PlexTraktSync ? [Y/n]', end=" ")
+    take_input('plextraktsync', 'ms')
     if services_classed['servarr'].__contains__('sonarr') or services_classed['servarr'].__contains__('radarr'):
         print('Use Overseerr? [Y/n]', end=" ")
         take_input('overseerr', 'servarr')
@@ -117,6 +119,8 @@ for service_class in services_classed.keys():
 if len(services) == 0:
     print('No services selected. Terminating.')
     exit(1)
+
+print(f"Sercvices Classed: {services_classed['ms']}")
 
 print('\n===CONFIGURATION===')
 

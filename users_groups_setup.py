@@ -97,6 +97,11 @@ class UserGroupSetup:
         os.system('sudo useradd plex -u 13010')
         self.create_config_dir('plex')
         os.system('sudo usermod -a -G mediacenter plex')
+    
+    def plextraktsync(self):
+        os.system('sudo useradd plextraktsync -u 13015')
+        self.create_config_dir('plextraktsync')
+        os.system('sudo usermod -a -G mediacenter plextraktsync')
 
     def sabnzbd(self):
         os.system('sudo useradd sabnzbd -u 13011')

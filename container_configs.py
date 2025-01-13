@@ -37,6 +37,21 @@ class ContainerConfig:
             '      - ' + self.root_dir_hdd + '/data/media:/media\n'
             '    restart: unless-stopped\n\n'
         )
+    def plextraktsync(self):
+        return (
+            '  plextraktsync:\n'
+            '    image: ghcr.io/taxel/plextraktsync\n'
+            '    command: sync\n'
+            '    container_name: plextraktsync\n'
+            '    network_mode: host\n'
+            '    environment:\n'
+            '      - PUID=13015\n'
+            '      - PGID=13005\n'
+            '      - TZ=' + self.timezone + '\n'
+            '    volumes:\n'
+            '      - ' + self.config_dir + '/plextraktsync-config:/config\n'
+            '    restart: unless-stopped\n\n'
+        )
 
     def tautulli(self):
         return (

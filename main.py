@@ -176,6 +176,7 @@ if generate_permissions:
     for service in services:
         try:
             # Execute permission setup for the specified service
+            print(f"Creating Permission Setup for Service: {service}")
             getattr(permission_setup, service)()
         except AttributeError:
             print(f"Warning: Service '{service}' does not have a defined setup method. Skipping...")

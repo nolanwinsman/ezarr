@@ -3,9 +3,14 @@ from container_configs import ContainerConfig
 from users_groups_setup import UserGroupSetup
 
 services_classed = dict()
+ALL_YES = False
+
 
 
 def take_boolean_input(default=True):
+    if ALL_YES:
+        return True
+        
     while True:
         ans = input()
         if ans == '':
@@ -44,6 +49,9 @@ def get_system_timezone():
 print('Welcome to the EZarr CLI.')
 print('This CLI will ask you which services you\'d like to use and more. If you\'d like more information about a '
       'certain service, look in the README.')
+
+print('Default YES to everything? [Y/n]', end=" ")
+ALL_YES = take_boolean_input(default=True):
 
 print('\n===SERVARR===')
 services_classed['servarr'] = []
@@ -105,10 +113,12 @@ services_classed['torrent'] = []
 print('Use qBittorrent? [Y/n]', end=" ")
 take_input('qbittorrent', 'torrent')
 
-print('\n===USENET===')
-services_classed['usenet'] = []
-print('Use SABnzbd? [Y/n]', end=" ")
-take_input('sabnzbd', 'usenet')
+
+# temporarily commented out USENET as I never use it
+#print('\n===USENET===')
+#services_classed['usenet'] = []
+#print('Use SABnzbd? [Y/n]', end=" ")
+#take_input('sabnzbd', 'usenet')
 
 if len(services_classed['torrent']) == 0 and len(services_classed['usenet']) == 0:
     print('Warning: no usenet or BitTorrent clients selected.')

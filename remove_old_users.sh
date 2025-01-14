@@ -19,5 +19,6 @@ sudo userdel overseerr
 sudo userdel jellyseerr
 sudo userdel qbittorrent
 sudo userdel sabnzbd
+sudo userdel plextraktsync
 sudo groupdel mediacenter
 

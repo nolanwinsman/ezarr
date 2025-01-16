@@ -15,6 +15,7 @@ Also includes a few other small changes for my personal preference.
 - **Python Script**: Now creates an `anime_movies`, `cartoon_movies`, and `documentaries` folder with exact same permissions as the `movies` folder
 - **Python Script**: Now creates an `anime`, and `cartoons` folder with exact same permissions as the `tv` folder
 - **Python Script**: Changed Qbittorrent docker container to be the [hotio qbittorrent](https://hotio.dev/containers/qbittorrent/) container
+- **Python Script**: Added PlexTraktSync Container. Read [This Document](docs/plextraktsync.md) for more details
 - **Python Script**: Default Location is America/Denver
 - **Shell Scripts**: No changes were made to the shell scripts, preserving compatibility with the original repository.
 

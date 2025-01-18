@@ -51,8 +51,6 @@ class ContainerConfig:
             '    restart: unless-stopped\n\n'
         )
 
-
-
     def tautulli(self):
         return (
             '  tautulli:\n'

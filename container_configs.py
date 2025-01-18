@@ -42,18 +42,12 @@ class ContainerConfig:
             '  plextraktsync:\n'
             '    image: lscr.io/linuxserver-labs/plextraktsync:latest\n'
             '    container_name: plextraktsync\n'
-            '    network_mode: host\n'
             '    environment:\n'
             '      - PUID=13015\n'
             '      - PGID=13000\n'
             '      - TZ=' + self.timezone + '\n'
             '    volumes:\n'
             '      - ' + self.config_dir + '/plextraktsync-config:/config\n'
-            '    labels:\n'
-            '      ofelia.enabled: "true"\n'
-            '      ofelia.job-run.sync.schedule: "30 2 * * *"\n'
-            '      ofelia.job-run.sync.command: "sync"\n'
-            '      ofelia.job-run.sync.container: "plextraktsync"\n'
             '    restart: unless-stopped\n\n'
         )
 

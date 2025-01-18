@@ -40,8 +40,7 @@ class ContainerConfig:
     def plextraktsync(self):
         return (
             '  plextraktsync:\n'
-            '    image: ghcr.io/taxel/plextraktsync\n'
-            '    command: sync\n'
+            '    image: lscr.io/linuxserver-labs/plextraktsync:latest\n'
             '    container_name: plextraktsync\n'
             '    network_mode: host\n'
             '    environment:\n'
@@ -57,6 +56,7 @@ class ContainerConfig:
             '      ofelia.job-run.sync.container: "plextraktsync"\n'
             '    restart: unless-stopped\n\n'
         )
+
 
 
     def tautulli(self):

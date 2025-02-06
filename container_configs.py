@@ -263,7 +263,23 @@ class ContainerConfig:
             '      - ' + self.config_dir + '/qbittorrent:/config\n'
             '      - ' + self.torrent_dir + ':/data/torrents\n\n' # set qbittorrent 'Default Save Path' to /data/torrents in WebUI
     )
-    
+
+    def unpackerr(self):
+    # same PUID as qbittorrent
+        return (
+            '  unpackerr:\n'
+            '    image: ghcr.io/hotio/unpackerr\n'
+            '    container_name: unpackerr\n'
+            '    environment:\n'
+            '      - PUID=13016\n'
+            '      - PGID=13000\n'
+            '      - UMASK=002\n'
+            '      - TZ=' + self.timezone + '\n'
+            '    volumes:\n'
+            '      - ' + self.config_dir + '/unpackerr:/config\n'
+            '      - ' + self.root_dir_hdd + '/data:/data\n'
+            '    restart: unless-stopped\n\n'
+        )
 
     def overseerr(self):
         return (

@@ -104,6 +104,11 @@ class UserGroupSetup:
         self.create_config_dir('plextraktsync')
         os.system('sudo usermod -a -G mediacenter plextraktsync')
 
+    def unpackerr(self):
+        os.system('sudo useradd unpackerr -u 13016')
+        self.create_config_dir('unpackerr')
+        os.system('sudo usermod -a -G mediacenter unpackerr')
+
     def sabnzbd(self):
         os.system('sudo useradd sabnzbd -u 13011')
         self.create_config_dir('sabnzbd')

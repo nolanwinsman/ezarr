@@ -112,6 +112,8 @@ print('\n===BITTORRENT===')
 services_classed['torrent'] = []
 print('Use qBittorrent? [Y/n]', end=" ")
 take_input('qbittorrent', 'torrent')
+print('Use unpackerr? [Y/n]', end=" ")
+take_input('unpackerr', 'torrent')
 
 
 # temporarily commented out USENET as I never use it

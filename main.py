@@ -116,11 +116,10 @@ print('Use unpackerr? [Y/n]', end=" ")
 take_input('unpackerr', 'torrent')
 
 
-# temporarily commented out USENET as I never use it
-#print('\n===USENET===')
-#services_classed['usenet'] = []
-#print('Use SABnzbd? [Y/n]', end=" ")
-#take_input('sabnzbd', 'usenet')
+print('\n===USENET===')
+services_classed['usenet'] = []
+print('Use SABnzbd? [Y/n]', end=" ")
+take_input('sabnzbd', 'usenet')
 
 if len(services_classed['torrent']) == 0 and len(services_classed['usenet']) == 0:
     print('Warning: no usenet or BitTorrent clients selected.')

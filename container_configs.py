@@ -262,6 +262,7 @@ class ContainerConfig:
             '    volumes:\n'
             '      - ' + self.config_dir + '/qbittorrent:/config\n'
             '      - ' + self.torrent_dir + ':/data/torrents\n\n' # set qbittorrent 'Default Save Path' to /data/torrents in WebUI
+            '      - ' + self.torrent_dir + ':/data/torrents/mkvs\n\n'
     )
 
     def unpackerr(self):

@@ -5,14 +5,17 @@ class UserGroupSetup:
     def __init__(self, root_dir_ssd='/', root_dir_hdd='/'):
         self.root_dir_ssd = root_dir_ssd
         self.root_dir_hdd = root_dir_hdd
-        os.system('sudo groupadd mediacenter -g 13000')
+        os.system('sudo groupadd -g 13000 mediacenter || true')
         os.system('sudo usermod -a -G mediacenter $USER')
         os.system(
-            '/bin/bash -c "sudo mkdir -pv ' + self.root_dir_hdd + '/data/{media,usenet,torrents} -m 775'
-            ' ; sudo chown $(id -u):mediacenter ' + self.root_dir_hdd + '/data'
-            ' ; sudo chown $(id -u):mediacenter ' + self.root_dir_hdd + '/data/{media,usenet,torrents}"'
+            '/bin/bash -c "'
+            'sudo mkdir -pv -m 775 ' + self.root_dir_hdd + '/data/{media,usenet,torrents} '
+            + self.root_dir_hdd + '/data/usenet/{incomplete,complete} '
+            + self.root_dir_hdd + '/data/torrents/{incomplete,complete}'
+            ' ; '
+            'sudo chown -R $(id -u):mediacenter ' + self.root_dir_hdd + '/data'
+            '"'
         )
-
     def create_config_dir(self, service_name):
         os.system(
             f'sudo mkdir -p {self.root_dir_ssd}/config/{service_name}-config -m 775'  # -m 775 gives read/write access to the whole mediacenter group

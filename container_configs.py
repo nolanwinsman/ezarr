@@ -328,7 +328,7 @@ class ContainerConfig:
             '      - TZ=' + self.timezone + '\n'
             '    volumes:\n'
             '      - ' + self.config_dir + '/sabnzbd-config:/config\n'
-            '      - ' + self.usenet_dir + ':/data/usenet\n'
+            '      - ' + self.usenet_dir + ':/data/usenet\n\n' # set sabnzbd 'Default Save Path' to /data/usenet in WebUI
             '    ports:\n'
             '      - "8081:8080"\n'
             '    restart: unless-stopped\n\n'

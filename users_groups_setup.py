@@ -1,6 +1,6 @@
 import os
 
-
+# UID up to 13017
 class UserGroupSetup:
     def __init__(self, root_dir_ssd='/', root_dir_hdd='/'):
         self.root_dir_ssd = root_dir_ssd
@@ -41,6 +41,12 @@ class UserGroupSetup:
         )
         self.create_config_dir('radarr')
         os.system('sudo usermod -a -G mediacenter radarr')
+
+    def recyclarr(self):
+        os.system('sudo useradd recyclarr -u 13017')
+        self.create_config_dir('recyclarr')
+        os.system('sudo usermod -a -G mediacenter recyclarr')
+
 
     def bazarr(self):
         os.system('/bin/bash -c "sudo useradd bazarr -u 13013"')

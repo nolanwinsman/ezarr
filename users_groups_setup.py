@@ -43,8 +43,13 @@ class UserGroupSetup:
         os.system('sudo usermod -a -G mediacenter radarr')
 
     def recyclarr(self):
-        os.system('sudo useradd recyclarr -u 13017')
-        self.create_config_dir('recyclarr')
+        # Create the folder without '-config' suffix:
+        os.system(
+            f'sudo mkdir -p {self.root_dir_ssd}/config/recyclarr -m 775'
+            f' ; sudo chown -R recyclarr:mediacenter {self.root_dir_ssd}/config/recyclarr'
+            f' ; sudo chown $(id -u):mediacenter {self.root_dir_ssd}/config'
+        )
+        os.system('sudo useradd recyclarr -u 13017 || true')
         os.system('sudo usermod -a -G mediacenter recyclarr')
 
 

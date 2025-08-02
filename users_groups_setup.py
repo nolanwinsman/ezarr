@@ -47,6 +47,9 @@ class UserGroupSetup:
         self.create_config_dir('recyclarr')
         os.system('sudo usermod -a -G mediacenter recyclarr')
 
+        # Create the 'recyclarr' Docker network if it doesn't already exist
+        os.system('docker network inspect recyclarr >/dev/null 2>&1 || docker network create recyclarr')
+
 
     def bazarr(self):
         os.system('/bin/bash -c "sudo useradd bazarr -u 13013"')

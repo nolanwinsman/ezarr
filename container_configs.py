@@ -129,16 +129,14 @@ class ContainerConfig:
             '    image: ghcr.io/recyclarr/recyclarr\n'
             '    container_name: recyclarr\n'
             '    user: ' + self.UID + ':13000\n'
-            '    networks:\n'
-            '      - recyclarr\n'
             '    volumes:\n'
             '      - ' + self.config_dir + '/recyclarr:/config\n'
             '    environment:\n'
             '      - TZ=' + self.timezone + '\n'
             '    restart: unless-stopped\n\n'
-        )
+    )
 
-
+    
     def bazarr(self):
         return (
             '  bazarr:\n'

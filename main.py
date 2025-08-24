@@ -116,6 +116,8 @@ print('Use qBittorrent? [Y/n]', end=" ")
 take_input('qbittorrent', 'torrent')
 print('Use unpackerr? [Y/n]', end=" ")
 take_input('unpackerr', 'torrent')
+print('Use cleanuparr? [Y/n]', end=" ")
+take_input('cleanuparr', 'torrent')
 
 
 print('\n===USENET===')
@@ -142,7 +144,7 @@ timezone = input()
 if (timezone == ''):
     timezone = get_system_timezone()
 
-if len(timezone) == 0: # if user pressed enter and reading timezone from /etc/localtime failed then default to Amsterdam
+if len(str(timezone)) == 0: # if user pressed enter and reading timezone from /etc/localtime failed then default to Amsterdam
     timezone = 'America/Denver'
 
 plex_claim = ''

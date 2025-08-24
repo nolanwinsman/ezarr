@@ -137,3 +137,9 @@ class UserGroupSetup:
         os.system('sudo useradd jackett -u 13008')
         self.create_config_dir('jackett')
         os.system('sudo usermod -a -G mediacenter jackett')
+
+    def cleanuparr(self):
+        os.system('sudo useradd cleanuparr -u 13018')
+        self.create_config_dir('cleanuparr')
+        os.system('sudo usermod -a -G mediacenter cleanuparr')
+

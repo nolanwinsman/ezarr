@@ -279,6 +279,24 @@ class ContainerConfig:
             '      - ' + self.torrent_dir + ':/data/torrents/mkvs\n\n'
     )
 
+    def cleanuparr(self):
+        return (
+            '  cleanuparr:\n'
+            '    image: ghcr.io/cleanuparr/cleanuparr:latest\n'
+            '    container_name: cleanuparr\n'
+            '    environment:\n'
+            '      - PORT=11011\n'
+            '      - PUID=' + self.UID + '\n'
+            '      - PGID=13000\n'
+            '      - TZ=' + self.timezone + '\n'
+            '    volumes:\n'
+            '      - ' + self.config_dir + '/cleanuparr:/config\n'
+            '    ports:\n'
+            '      - "11011:11011"\n'
+            '    restart: unless-stopped\n\n'
+        )
+
+
     def unpackerr(self):
     # same PUID as qbittorrent
         return (

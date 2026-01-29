@@ -172,24 +172,6 @@ class ContainerConfig:
             '    restart: unless-stopped\n\n'
         )
 
-    def readarr(self):
-        return (
-            '  readarr:\n'
-            '    image: lscr.io/linuxserver/readarr:develop\n'
-            '    container_name: readarr\n'
-            '    environment:\n'
-            '      - PUID=13004\n'
-            '      - PGID=13000\n'
-            '      - UMASK=002\n'
-            '      - TZ=' + self.timezone + '\n'
-            '    volumes:\n'
-            '      - ' + self.config_dir + '/readarr-config:/config\n'
-            '      - ' + self.root_dir_hdd + '/data:/data\n'
-            '    ports:\n'
-            '      - "8787:8787"\n'
-            '    restart: unless-stopped\n\n'
-        )
-
     def mylar3(self):
         return (
             '  mylar3:\n'

@@ -308,7 +308,7 @@ class ContainerConfig:
             '    restart: unless-stopped\n\n'
         )
 
-        def overseerr(self):
+    def overseerr(self):
         return (
             '  overseerr:\n'
             '    image: sctx/overseerr:latest\n'

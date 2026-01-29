@@ -244,7 +244,6 @@ class ContainerConfig:
             '      - VPN_LAN_NETWORK=10.0.0.0/24\n'
             '      - VPN_EXPOSE_PORTS_ON_LAN\n'
             '      - VPN_AUTO_PORT_FORWARD=false\n'
-            '      - VPN_PORT_REDIRECTS=5687:5687/tcp\n'
             '      - VPN_KEEP_LOCAL_DNS=false\n'
             '      - VPN_FIREWALL_TYPE=auto\n'
             '      - PRIVOXY_ENABLED=false\n'

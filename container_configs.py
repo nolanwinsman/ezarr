@@ -19,6 +19,7 @@ class ContainerConfig:
         self.comic_dir = root_dir_hdd + '/media/comics'
         self.torrent_dir = root_dir_hdd + '/data/torrents'
         self.usenet_dir = root_dir_hdd + '/data/usenet'
+        self.nginx_dir = self.config_dir + '/nginx-proxy-manager'
         self.UID = os.popen('id -u').read().rstrip('\n')
 
     def plex(self):
@@ -391,3 +392,19 @@ class ContainerConfig:
             '    restart: unless-stopped\n\n'
         )
         
+    def nginx_proxy_manager(self):
+        return (
+            '  nginx-proxy-manager:\n'
+            '    image: jc21/nginx-proxy-manager:latest\n'
+            '    container_name: nginx-proxy-manager\n'
+            '    environment:\n'
+            '      - TZ=' + self.timezone + '\n'
+            '    ports:\n'
+            '      - "80:80"\n'
+            '      - "81:81"\n'
+            '      - "443:443"\n'
+            '    volumes:\n'
+            '      - ' + self.config_dir + '/nginx-proxy-manager:/data\n'
+            '      - ' + self.config_dir + '/nginx-proxy-manager/letsencrypt:/etc/letsencrypt\n'
+            '    restart: unless-stopped\n\n'
+        )

@@ -124,6 +124,11 @@ take_input('sabnzbd', 'usenet')
 if len(services_classed['torrent']) == 0 and len(services_classed['usenet']) == 0:
     print('Warning: no usenet or BitTorrent clients selected.')
 
+print('\n===INFRASTRUCTURE===')
+services_classed['infra'] = []
+print('Use Nginx Proxy Manager? [Y/n]', end=" ")
+take_input('nginx_proxy_manager', 'infra')
+
 services = []
 for service_class in services_classed.keys():
     services.extend(services_classed[service_class])

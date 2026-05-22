@@ -143,3 +143,6 @@ class UserGroupSetup:
         self.create_config_dir('cleanuparr')
         os.system('sudo usermod -a -G mediacenter cleanuparr')
 
+    def nginx_proxy_manager(self):
+        os.system('sudo useradd nginx-proxy-manager -u 13019')
+        self.create_config_dir('nginx-proxy-manager')

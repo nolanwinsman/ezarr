@@ -401,7 +401,7 @@ class ContainerConfig:
             '      - TZ=' + self.timezone + '\n'
             '    ports:\n'
             '      - "80:80"\n'
-            '      - "81:81"\n'
+            '      - "81:81"\n' 
             '      - "443:443"\n'
             '    volumes:\n'
             '      - ' + self.config_dir + '/nginx-proxy-manager:/data\n'

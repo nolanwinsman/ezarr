@@ -53,6 +53,16 @@ print('This CLI will ask you which services you\'d like to use and more. If you\
 print('Default YES to everything? [Y/n]', end=" ")
 ALL_YES = take_boolean_input()
 
+print('Default HDD/SSD paths to /mnt/hdds/ /mnt/ssd/ ? [Y/n]', end=" ")
+# Used for defaulting the SSD/HDD path. Makes rerunning the script easier.
+SSD_HDD_PATH_YES = take_boolean_input()
+
+if SSD_HDD_PATH_YES:
+    root_dir_ssd = "/mnt/ssd/"
+    print(f"SSD Path Defaulted to {root_dir_ssd}")
+    root_dir_hdd = "/mnt/hdds/"
+    print(f"HDD Path Defaulted to {root_dir_hdd}")
+
 print('\n===SERVARR===')
 services_classed['servarr'] = []
 print('Use Sonarr? [Y/n]', end=" ")
@@ -153,18 +163,12 @@ if services.__contains__('plex'):
     print('If you have a PleX claim token, enter it now. Otherwise, just press enter.', end=' ')
     plex_claim = input()
 
-print('Where would you like to keep your ssd app files?', end=' ')
-root_dir_ssd = take_directory_input()
-if root_dir_ssd == "":
-    root_dir_ssd = "/mnt/ssd/"
-    print(f"SSD Path Defaulted to {root_dir_ssd}")
+if not SSD_HDD_PATH_YES:
+    print('Where would you like to keep your ssd app files?', end=' ')
+    root_dir_ssd = take_directory_input()
 
-
-print('Where would you like to keep your hhd media/download files?', end=' ')
-root_dir_hdd = take_directory_input()
-if root_dir_hdd == "":
-    root_dir_hdd = "/mnt/hdds/"
-    print(f"HDD Path Defaulted to {root_dir_hdd}")
+    print('Where would you like to keep your hhd media/download files?', end=' ')
+    root_dir_hdd = take_directory_input()
 
 compose = open('docker-compose.yml', 'w')
 compose.write(

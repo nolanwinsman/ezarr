@@ -50,12 +50,13 @@ print('Welcome to the EZarr CLI.')
 print('This CLI will ask you which services you\'d like to use and more. If you\'d like more information about a '
       'certain service, look in the README.')
 
-print('Default YES to everything? [Y/n]', end=" ")
-ALL_YES = take_boolean_input()
-
 print('Default HDD/SSD paths to /mnt/hdds/ /mnt/ssd/ ? [Y/n]', end=" ")
 # Used for defaulting the SSD/HDD path. Makes rerunning the script easier.
 SSD_HDD_PATH_YES = take_boolean_input()
+
+
+print('Default YES to everything? [Y/n]', end=" ")
+ALL_YES = take_boolean_input()
 
 if SSD_HDD_PATH_YES:
     root_dir_ssd = "/mnt/ssd/"

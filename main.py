@@ -155,9 +155,16 @@ if services.__contains__('plex'):
 
 print('Where would you like to keep your ssd app files?', end=' ')
 root_dir_ssd = take_directory_input()
+if root_dir_ssd == "":
+    root_dir_ssd = "/mnt/ssd/"
+    print(f"SSD Path Defaulted to {root_dir_ssd}")
+
 
 print('Where would you like to keep your hhd media/download files?', end=' ')
 root_dir_hdd = take_directory_input()
+if root_dir_hdd == "":
+    root_dir_hdd = "/mnt/hdds/"
+    print(f"HDD Path Defaulted to {root_dir_hdd}")
 
 compose = open('docker-compose.yml', 'w')
 compose.write(

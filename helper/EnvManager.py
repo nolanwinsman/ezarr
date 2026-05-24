@@ -5,6 +5,7 @@ class EnvManager:
     def __init__(self, path=".env"):
         self.path = path
         self.env = self._load()
+        self.dirty = False
 
     # -------------------------
     # Load .env file
@@ -35,6 +36,8 @@ class EnvManager:
             for k in sorted(self.env.keys()):
                 f.write(f"{k}={self.env[k]}\n")
 
+        self.dirty = False
+
     # -------------------------
     # Get or prompt
     # -------------------------
@@ -47,12 +50,12 @@ class EnvManager:
 
             return value
 
-        if prompt:
-            value = input(f"{prompt}: ").strip()
-            self.env[key] = value
-            return value
+        value = input(f"{prompt}: ").strip()
 
-        return None
+        self.env[key] = value
+        self.dirty = True   # ← IMPORTANT
+
+    return value
 
     # -------------------------
     # Helpers

@@ -219,7 +219,10 @@ if generate_permissions:
 else:
     print("Permission and folder structure generation skipped by user.")
 
-save_env(env)
+# Saves .env file if any updates were made
+if env.dirty:
+    print("Updates made to .env file. Saving updates")
+    env.save()
 
 print('Process complete. You can now run "docker compose up -d" to start your containers.')
 print('Thank you for using EZarr. If you experience any issues or have feature requests, add them to our issues.')

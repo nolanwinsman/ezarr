@@ -19,7 +19,7 @@ class ContainerConfig:
         self.comic_dir = root_dir_hdd + '/media/comics'
         self.torrent_dir = root_dir_hdd + '/data/torrents'
         self.usenet_dir = root_dir_hdd + '/data/usenet'
-        self.nginx_dir = self.config_dir + '/nginx-proxy-manager'
+        #self.nginx_dir = self.config_dir + '/nginx-proxy-manager'
         self.UID = os.popen('id -u').read().rstrip('\n')
 
     def plex(self):
@@ -407,4 +407,19 @@ class ContainerConfig:
             '      - ' + self.config_dir + '/nginx-proxy-manager:/data\n'
             '      - ' + self.config_dir + '/nginx-proxy-manager/letsencrypt:/etc/letsencrypt\n'
             '    restart: unless-stopped\n\n'
+        )
+
+    def adguardhome(self):
+        return (
+            '  adguardhome:\n'
+            '    image: adguard/adguardhome:latest\n'
+            '    container_name: adguardhome\n'
+            '    restart: unless-stopped\n'
+            '    ports:\n'
+            '      - "53:53/tcp"\n'
+            '      - "53:53/udp"\n'
+            '      - "3000:3000/tcp"\n'
+            '    volumes:\n'
+            '      - ' + self.config_dir + '/adguardhome/work:/opt/adguardhome/work\n'
+            '      - ' + self.config_dir + '/adguardhome/conf:/opt/adguardhome/conf\n\n'
         )

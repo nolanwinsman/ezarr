@@ -146,3 +146,7 @@ class UserGroupSetup:
     def nginx_proxy_manager(self):
         os.system('sudo useradd nginx-proxy-manager -u 13019')
         self.create_config_dir('nginx-proxy-manager')
+
+    def adguardhome(self):
+        os.system('sudo useradd adguardhome -u 13020')
+        self.create_config_dir('adguardhome')

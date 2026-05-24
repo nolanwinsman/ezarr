@@ -6,7 +6,6 @@ from helper.EnvManager import EnvManager
 services_classed = dict()
 ALL_YES = False
 
-
 def take_boolean_input(default=True):
     if ALL_YES:
         return True
@@ -170,17 +169,33 @@ if (timezone == ''):
 if len(str(timezone)) == 0: # if user pressed enter and reading timezone from /etc/localtime failed then default to Amsterdam
     timezone = 'America/Denver'
 
-plex_claim = env.get(
-    "PLEX_CLAIM",
-    "Plex claim token (optional)",
-    mask=True
-)
+if services.__contains__('plex'):
+    env = load_env()
 
-cloudflare_token = env.get(
-    "CLOUDFLARE_TUNNEL_TOKEN",
-    "Cloudflare Tunnel token",
-    mask=True
-)
+    if "PLEX_CLAIM" not in env:
+        print("Plex claim token (optional, press enter to skip):", end=' ')
+        token = input().strip()
+
+        env["PLEX_CLAIM"] = token  # can be empty
+        save_env(env)
+    else:
+        masked = env["PLEX_CLAIM"]
+        if masked:
+            print(f"PLEX_CLAIM already set ({masked[:6]}...{masked[-4:]})")
+        else:
+            print("PLEX_CLAIM already set (empty)")
+
+if services.__contains__('cloudflared'):
+    env = load_env()
+
+    if "CLOUDFLARE_TUNNEL_TOKEN" not in env or not env["CLOUDFLARE_TUNNEL_TOKEN"]:
+        print("Cloudflare Tunnel token:", end=' ')
+        token = input().strip()
+
+        env["CLOUDFLARE_TUNNEL_TOKEN"] = token
+        save_env(env)
+    else:
+        print("CLOUDFLARE_TUNNEL_TOKEN already set (hidden)")
 
 if not SSD_HDD_PATH_YES:
     print('Where would you like to keep your ssd app files?', end=' ')

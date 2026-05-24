@@ -55,7 +55,7 @@ class EnvManager:
         self.env[key] = value
         self.dirty = True   # ← IMPORTANT
 
-    return value
+        return value
 
     # -------------------------
     # Helpers

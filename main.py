@@ -170,6 +170,7 @@ if len(str(timezone)) == 0: # if user pressed enter and reading timezone from /e
     timezone = 'America/Denver'
 
 # Requests the Tokens. Caches them in .env if not already there.
+plex_claim = ""
 if 'plex' in services:
     env.require(
         "PLEX_CLAIM",

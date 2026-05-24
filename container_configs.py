@@ -444,4 +444,5 @@ class ContainerConfig:
             '    restart: unless-stopped\n'
             '    environment:\n'
             '      - TUNNEL_TOKEN='+ self.cloudflared_tunnel_token +'\n'
+            '    command: tunnel run\n'
         )

@@ -1,10 +1,10 @@
 import os
 from container_configs import ContainerConfig
 from users_groups_setup import UserGroupSetup
+from helper.EnvManager import EnvManager
 
 services_classed = dict()
 ALL_YES = False
-
 
 
 def take_boolean_input(default=True):
@@ -49,6 +49,10 @@ def get_system_timezone():
 print('Welcome to the EZarr CLI.')
 print('This CLI will ask you which services you\'d like to use and more. If you\'d like more information about a '
       'certain service, look in the README.')
+
+# Loads in the .ev file if it exists and prints small portions of what's in there.
+env = EnvManager()
+env.summary()
 
 print('Default HDD/SSD paths to /mnt/hdds/ /mnt/ssd/ ? [Y/n]', end=" ")
 # Used for defaulting the SSD/HDD path. Makes rerunning the script easier.
@@ -166,10 +170,17 @@ if (timezone == ''):
 if len(str(timezone)) == 0: # if user pressed enter and reading timezone from /etc/localtime failed then default to Amsterdam
     timezone = 'America/Denver'
 
-plex_claim = ''
-if services.__contains__('plex'):
-    print('If you have a PleX claim token, enter it now. Otherwise, just press enter.', end=' ')
-    plex_claim = input()
+plex_claim = env.get(
+    "PLEX_CLAIM",
+    "Plex claim token (optional)",
+    mask=True
+)
+
+cloudflare_token = env.get(
+    "CLOUDFLARE_TUNNEL_TOKEN",
+    "Cloudflare Tunnel token",
+    mask=True
+)
 
 if not SSD_HDD_PATH_YES:
     print('Where would you like to keep your ssd app files?', end=' ')
@@ -208,6 +219,7 @@ if generate_permissions:
 else:
     print("Permission and folder structure generation skipped by user.")
 
+save_env(env)
 
 print('Process complete. You can now run "docker compose up -d" to start your containers.')
 print('Thank you for using EZarr. If you experience any issues or have feature requests, add them to our issues.')

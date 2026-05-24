@@ -93,7 +93,7 @@ class UserGroupSetup:
         self.create_config_dir('plex')
         os.system('sudo usermod -a -G mediacenter plex')
     
-       def sabnzbd(self):
+    def sabnzbd(self):
         os.system('sudo useradd sabnzbd -u 13011')
         self.create_config_dir('sabnzbd')
         os.system('sudo usermod -a -G mediacenter sabnzbd')

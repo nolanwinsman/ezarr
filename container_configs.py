@@ -430,8 +430,7 @@ class ContainerConfig:
             '  cloudflared:\n'
             '    image: cloudflare/cloudflared:latest\n'
             '    container_name: cloudflared\n'
-            '    command: tunnel run\n'
             '    restart: unless-stopped\n'
-            '    volumes:\n'
-            '      - ' + self.config_dir + '/cloudflared:/etc/cloudflared\n\n'
+            '    environment:\n'
+            '      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}\n'
         )

@@ -42,22 +42,6 @@ class UserGroupSetup:
         self.create_config_dir('radarr')
         os.system('sudo usermod -a -G mediacenter radarr')
 
-    def recyclarr(self):
-        # Create the folder without '-config' suffix:
-        os.system(
-            f'sudo mkdir -p {self.root_dir_ssd}/config/recyclarr -m 775'
-            f' ; sudo chown -R recyclarr:mediacenter {self.root_dir_ssd}/config/recyclarr'
-            f' ; sudo chown $(id -u):mediacenter {self.root_dir_ssd}/config'
-        )
-        os.system('sudo useradd recyclarr -u 13017 || true')
-        os.system('sudo usermod -a -G mediacenter recyclarr')
-
-
-    def bazarr(self):
-        os.system('/bin/bash -c "sudo useradd bazarr -u 13013"')
-        self.create_config_dir('bazarr')
-        os.system('sudo usermod -a -G mediacenter bazarr')
-
     def lidarr(self):
         os.system(
             '/bin/bash -c "sudo useradd lidarr -u 13003'
@@ -85,15 +69,6 @@ class UserGroupSetup:
         self.create_config_dir('mylar')
         os.system('sudo usermod -a -G mediacenter mylar')
 
-    def audiobookshelf(self):
-        os.system(
-            '/bin/bash -c "sudo useradd audiobookshelf -u 13014'
-            ' ; sudo mkdir -pv ' + self.root_dir_hdd + '/data/media/{audiobooks,podcasts,audiobookshelf-metadata} -m 775'
-            ' ; sudo chown -R audiobookshelf:mediacenter ' + self.root_dir_hdd + '/data/media/{audiobooks,podcasts,audiobookshelf-metadata}"'
-        )
-        self.create_config_dir('audiobookshelf')
-        os.system('sudo usermod -a -G mediacenter audiobookshelf')
-
     def prowlarr(self):
         os.system('sudo useradd prowlarr -u 13006')
         self.create_config_dir('prowlarr')
@@ -102,6 +77,11 @@ class UserGroupSetup:
     def qbittorrent(self):
         os.system('sudo useradd qbittorrent -u 13007')
         os.system('sudo usermod -a -G mediacenter qbittorrent')
+
+    def jackett(self):
+        os.system('sudo useradd jackett -u 13008')
+        self.create_config_dir('jackett')
+        os.system('sudo usermod -a -G mediacenter jackett')
 
     def overseerr(self):
         os.system('sudo useradd overseerr -u 13009')
@@ -113,6 +93,30 @@ class UserGroupSetup:
         self.create_config_dir('plex')
         os.system('sudo usermod -a -G mediacenter plex')
     
+       def sabnzbd(self):
+        os.system('sudo useradd sabnzbd -u 13011')
+        self.create_config_dir('sabnzbd')
+        os.system('sudo usermod -a -G mediacenter sabnzbd')
+
+    def jellyseerr(self):
+        os.system('sudo useradd jellyseerr -u 13012')
+        self.create_config_dir('jellyseerr')
+        os.system('sudo usermod -a -G mediacenter jellyseerr')
+
+    def bazarr(self):
+        os.system('/bin/bash -c "sudo useradd bazarr -u 13013"')
+        self.create_config_dir('bazarr')
+        os.system('sudo usermod -a -G mediacenter bazarr')
+   
+    def audiobookshelf(self):
+        os.system(
+            '/bin/bash -c "sudo useradd audiobookshelf -u 13014'
+            ' ; sudo mkdir -pv ' + self.root_dir_hdd + '/data/media/{audiobooks,podcasts,audiobookshelf-metadata} -m 775'
+            ' ; sudo chown -R audiobookshelf:mediacenter ' + self.root_dir_hdd + '/data/media/{audiobooks,podcasts,audiobookshelf-metadata}"'
+        )
+        self.create_config_dir('audiobookshelf')
+        os.system('sudo usermod -a -G mediacenter audiobookshelf')
+
     def plextraktsync(self):
         os.system('sudo useradd plextraktsync -u 13015')
         self.create_config_dir('plextraktsync')
@@ -123,20 +127,15 @@ class UserGroupSetup:
         self.create_config_dir('unpackerr')
         os.system('sudo usermod -a -G mediacenter unpackerr')
 
-    def sabnzbd(self):
-        os.system('sudo useradd sabnzbd -u 13011')
-        self.create_config_dir('sabnzbd')
-        os.system('sudo usermod -a -G mediacenter sabnzbd')
-
-    def jellyseerr(self):
-        os.system('sudo useradd jellyseerr -u 13012')
-        self.create_config_dir('jellyseerr')
-        os.system('sudo usermod -a -G mediacenter jellyseerr')
-
-    def jackett(self):
-        os.system('sudo useradd jackett -u 13008')
-        self.create_config_dir('jackett')
-        os.system('sudo usermod -a -G mediacenter jackett')
+    def recyclarr(self):
+        # Create the folder without '-config' suffix:
+        os.system(
+            f'sudo mkdir -p {self.root_dir_ssd}/config/recyclarr -m 775'
+            f' ; sudo chown -R recyclarr:mediacenter {self.root_dir_ssd}/config/recyclarr'
+            f' ; sudo chown $(id -u):mediacenter {self.root_dir_ssd}/config'
+        )
+        os.system('sudo useradd recyclarr -u 13017 || true')
+        os.system('sudo usermod -a -G mediacenter recyclarr')
 
     def cleanuparr(self):
         os.system('sudo useradd cleanuparr -u 13018')
@@ -150,3 +149,7 @@ class UserGroupSetup:
     def adguardhome(self):
         os.system('sudo useradd adguardhome -u 13020')
         self.create_config_dir('adguardhome')
+
+    def cloudflared(self):
+        os.system('sudo useradd cloudflared -u 13021')
+        self.create_config_dir('cloudflared')

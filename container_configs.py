@@ -423,3 +423,15 @@ class ContainerConfig:
             '      - ' + self.config_dir + '/adguardhome/work:/opt/adguardhome/work\n'
             '      - ' + self.config_dir + '/adguardhome/conf:/opt/adguardhome/conf\n\n'
         )
+
+
+    def cloudflared(self):
+        return (
+            '  cloudflared:\n'
+            '    image: cloudflare/cloudflared:latest\n'
+            '    container_name: cloudflared\n'
+            '    command: tunnel run\n'
+            '    restart: unless-stopped\n'
+            '    volumes:\n'
+            '      - ' + self.config_dir + '/cloudflared:/etc/cloudflared\n\n'
+        )

@@ -141,6 +141,9 @@ services_classed['networking'] = []
 print('Use Nginx Proxy Manager? [Y/n]', end=" ")
 take_input('nginx_proxy_manager', 'networking')
 
+print('Use Cloudflared Tunnel? [Y/n]', end=" ")
+take_input('cloudflared', 'networking')
+
 print('Use AdGuard Home? [Y/n]', end=" ")
 take_input('adguardhome', 'networking')
 

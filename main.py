@@ -169,19 +169,29 @@ if (timezone == ''):
 if len(str(timezone)) == 0: # if user pressed enter and reading timezone from /etc/localtime failed then default to Amsterdam
     timezone = 'America/Denver'
 
-# Requests the Tokens. Caches them in .env if not already there.
+## TOKENS
+
+# Plex
 plex_claim = ""
 if 'plex' in services:
-    env.require(
+    plex_claim = env.require(
         "PLEX_CLAIM",
-        prompt="Plex Claim token"
+        prompt="Plex Claim token",
+        optional=True
     )
 
+# Cloudflared
+cloudflare_token = ""
 if 'cloudflared' in services:
-    env.require(
+    cloudflare_token = env.require(
         "CLOUDFLARE_TUNNEL_TOKEN",
         prompt="Cloudflare Tunnel token"
     )
+
+tokens = {
+    "PLEX_CLAIM": plex_claim,
+    "CLOUDFLARE_TUNNEL_TOKEN": cloudflare_token,
+}
 
 if not SSD_HDD_PATH_YES:
     print('Where would you like to keep your ssd app files?', end=' ')
@@ -196,7 +206,12 @@ compose.write(
     'services:\n'
 )
 
-container_config = ContainerConfig(root_dir_ssd, root_dir_hdd, timezone, plex_claim=plex_claim)
+container_config = ContainerConfig(
+    root_dir_ssd,
+    root_dir_hdd,
+    timezone,
+    tokens=tokens
+)
 
 for service in services:
     compose.write(getattr(container_config, service)())

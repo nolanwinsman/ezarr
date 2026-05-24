@@ -5,22 +5,33 @@ class ContainerConfig:
                  root_dir_ssd,
                  root_dir_hdd,
                  timezone,
-                 plex_claim='',
+                 tokens=None,
                  ):
         self.root_dir_ssd = root_dir_ssd
         self.root_dir_hdd = root_dir_hdd
         self.timezone = timezone
+
+        # store all env tokens in one place
+        self.tokens = tokens or {}
+
         self.config_dir = root_dir_ssd + '/config'
-        self.plex_claim = plex_claim
+
+        # optional convenience accessors (safe defaults)
+        self.plex_claim = self.tokens.get("PLEX_CLAIM", "")
+        self.cloudflared_tunnel_token = self.tokens.get("CLOUDFLARE_TUNNEL_TOKEN", "")
+
+        # media dirs
         self.movie_dir = root_dir_hdd + '/media/movies'
         self.tv_dir = root_dir_hdd + '/media/tv'
         self.music_dir = root_dir_hdd + '/media/music'
         self.book_dir = root_dir_hdd + '/media/books'
         self.comic_dir = root_dir_hdd + '/media/comics'
+
         self.torrent_dir = root_dir_hdd + '/data/torrents'
         self.usenet_dir = root_dir_hdd + '/data/usenet'
-        #self.nginx_dir = self.config_dir + '/nginx-proxy-manager'
-        self.UID = os.popen('id -u').read().rstrip('\n')
+
+        # system info
+        self.UID = os.popen('id -u').read().strip()
 
     def plex(self):
         return (
@@ -432,5 +443,5 @@ class ContainerConfig:
             '    container_name: cloudflared\n'
             '    restart: unless-stopped\n'
             '    environment:\n'
-            '      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}\n'
+            '      - TUNNEL_TOKEN='+ self.cloudflared_tunnel_token +'\n'
         )

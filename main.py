@@ -147,8 +147,8 @@ take_input('nginx_proxy_manager', 'networking')
 print('Use Cloudflared Tunnel? [Y/n]', end=" ")
 take_input('cloudflared', 'networking')
 
-print('Use AdGuard Home? [Y/n]', end=" ")
-take_input('adguardhome', 'networking')
+#print('Use AdGuard Home? [Y/n]', end=" ")
+#take_input('adguardhome', 'networking')
 
 services = []
 for service_class in services_classed.keys():

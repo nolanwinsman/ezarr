@@ -7,9 +7,6 @@ class EnvManager:
         self.env = self._load()
         self.dirty = False
 
-    # -------------------------
-    # Load .env file
-    # -------------------------
     def _load(self):
         env = {}
 
@@ -23,44 +20,50 @@ class EnvManager:
                 if not line or line.startswith("#") or "=" not in line:
                     continue
 
-                key, value = line.split("=", 1)
-                env[key.strip()] = value.strip().strip('"').strip("'")
+                k, v = line.split("=", 1)
+                env[k.strip()] = v.strip()
 
         return env
 
-    # -------------------------
-    # Save .env file
-    # -------------------------
-    def save(self):
-        with open(self.path, "w") as f:
-            for k in sorted(self.env.keys()):
-                f.write(f"{k}={self.env[k]}\n")
+    # -----------------------------
+    # CORE FEATURE YOU WANT
+    # -----------------------------
+    def require(self, key, prompt=None, optional=False, mask=True):
+        value = self.env.get(key, "").strip()
 
-        self.dirty = False
-
-    # -------------------------
-    # Get or prompt
-    # -------------------------
-    def get(self, key, prompt=None, mask=False):
-        if key in self.env and self.env[key]:
-            value = self.env[key]
-
-            if mask:
-                self._print_masked(key, value)
-
+        # If value exists, just return it
+        if value:
+            self._print_loaded(key, value, mask)
             return value
 
-        value = input(f"{prompt}: ").strip()
+        # If optional and empty, allow skip
+        if optional and not value:
+            if prompt:
+                print(f"{prompt} (optional, press enter to skip):", end=" ")
+            else:
+                print(f"{key} (optional):", end=" ")
+
+            value = input().strip()
+            self.env[key] = value
+            self.dirty = True
+            return value
+
+        # Required field
+        if not prompt:
+            prompt = f"Enter {key}"
+
+        print(f"{prompt}:", end=" ")
+        value = input().strip()
 
         self.env[key] = value
-        self.dirty = True   # ← IMPORTANT
-
+        self.dirty = True
         return value
 
-    # -------------------------
-    # Helpers
-    # -------------------------
-    def _print_masked(self, key, value):
+    def _print_loaded(self, key, value, mask):
+        if not mask:
+            print(f"{key} = {value}")
+            return
+
         if len(value) > 10:
             print(f"{key} = {value[:6]}...{value[-4:]}")
         else:
@@ -74,7 +77,17 @@ class EnvManager:
         print("\nLoaded environment variables:")
 
         for k, v in self.env.items():
-            if "TOKEN" in k or "KEY" in k or "SECRET" in k:
-                self._print_masked(k, v)
+            if any(x in k for x in ["TOKEN", "KEY", "SECRET"]):
+                self._print_loaded(k, v, True)
             else:
-                print(f"  {k} = {v}")
+                print(f"{k} = {v}")
+
+    def save(self):
+        if not self.dirty:
+            return
+
+        with open(self.path, "w") as f:
+            for k, v in self.env.items():
+                f.write(f"{k}={v}\n")
+
+        self.dirty = False

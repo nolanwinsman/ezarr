@@ -169,26 +169,9 @@ if (timezone == ''):
 if len(str(timezone)) == 0: # if user pressed enter and reading timezone from /etc/localtime failed then default to Amsterdam
     timezone = 'America/Denver'
 
-if 'plex' in services:
-    if "PLEX_CLAIM" not in env.env or not env.env["PLEX_CLAIM"]:
-        print("Plex claim token (optional):", end=' ')
-        token = input().strip()
-
-        env.env["PLEX_CLAIM"] = token
-        env.dirty = True
-    else:
-        masked = env.env["PLEX_CLAIM"]
-        print(f"PLEX_CLAIM already set ({masked[:6]}...{masked[-4:]})" if masked else "PLEX_CLAIM already set (empty)")
-
-if 'cloudflared' in services:
-    if "CLOUDFLARE_TUNNEL_TOKEN" not in env.env or not env.env["CLOUDFLARE_TUNNEL_TOKEN"]:
-        print("Cloudflare Tunnel token:", end=' ')
-        token = input().strip()
-
-        env.env["CLOUDFLARE_TUNNEL_TOKEN"] = token
-        env.dirty = True
-    else:
-        print("CLOUDFLARE_TUNNEL_TOKEN already set (hidden)")
+# Requests the Tokens. Caches them in .env if not already there.
+env.require_secret("CLOUDFLARE_TUNNEL_TOKEN")
+env.require_optional("PLEX_CLAIM")
 
 if not SSD_HDD_PATH_YES:
     print('Where would you like to keep your ssd app files?', end=' ')

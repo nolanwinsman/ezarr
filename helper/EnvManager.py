@@ -25,50 +25,59 @@ class EnvManager:
 
         return env
 
-    # -----------------------------
-    # CORE FEATURE YOU WANT
-    # -----------------------------
-    def require(self, key, prompt=None, optional=False, mask=True):
-        value = self.env.get(key, "").strip()
+    # --------------------------------------------------
+    # CORE: REQUIRE VALUE
+    # --------------------------------------------------
+    def require(self, key, prompt=None, optional=False):
+        """
+        Ensures an environment variable exists and is non-empty.
+        Empty strings (KEY=) are treated as missing.
+        """
 
-        # If value exists, just return it
-        if value:
-            self._print_loaded(key, value, mask)
+        raw = self.env.get(key, None)
+        value = raw.strip() if isinstance(raw, str) else ""
+
+        # already valid
+        if value != "":
+            self._print_masked(key, value)
             return value
 
-        # If optional and empty, allow skip
-        if optional and not value:
-            if prompt:
-                print(f"{prompt} (optional, press enter to skip):", end=" ")
-            else:
-                print(f"{key} (optional):", end=" ")
+        # missing
+        prompt_text = f"{prompt or key}"
+        if optional:
+            prompt_text += " (optional)"
 
-            value = input().strip()
-            self.env[key] = value
-            self.dirty = True
-            return value
-
-        # Required field
-        if not prompt:
-            prompt = f"Enter {key}"
-
-        print(f"{prompt}:", end=" ")
+        print(f"{prompt_text}:", end=" ")
         value = input().strip()
 
         self.env[key] = value
         self.dirty = True
         return value
 
-    def _print_loaded(self, key, value, mask):
-        if not mask:
-            print(f"{key} = {value}")
-            return
+    # --------------------------------------------------
+    # PRINT HELPERS (UNIFIED)
+    # --------------------------------------------------
+    def _print_masked(self, key, value):
+        """Print env value safely (mask secrets)."""
 
-        if len(value) > 10:
-            print(f"{key} = {value[:6]}...{value[-4:]}")
+        if self._is_secret(key):
+            print(f"{key} = {self._mask(value)}")
         else:
-            print(f"{key} = ***")
+            print(f"{key} = {value}")
 
+    def _is_secret(self, key):
+        return any(x in key.upper() for x in ["TOKEN", "KEY", "SECRET"])
+
+    def _mask(self, value):
+        if not value:
+            return "***"
+        if len(value) <= 10:
+            return "***"
+        return value[:6] + "..." + value[-4:]
+
+    # --------------------------------------------------
+    # SUMMARY
+    # --------------------------------------------------
     def summary(self):
         if not self.env:
             print("No .env values found.")
@@ -77,11 +86,11 @@ class EnvManager:
         print("\nLoaded environment variables:")
 
         for k, v in self.env.items():
-            if any(x in k for x in ["TOKEN", "KEY", "SECRET"]):
-                self._print_loaded(k, v, True)
-            else:
-                print(f"{k} = {v}")
+            self._print_masked(k, v)
 
+    # --------------------------------------------------
+    # SAVE
+    # --------------------------------------------------
     def save(self):
         if not self.dirty:
             return

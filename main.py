@@ -170,8 +170,17 @@ if len(str(timezone)) == 0: # if user pressed enter and reading timezone from /e
     timezone = 'America/Denver'
 
 # Requests the Tokens. Caches them in .env if not already there.
-env.require_secret("CLOUDFLARE_TUNNEL_TOKEN")
-env.require_optional("PLEX_CLAIM")
+if 'plex' in services:
+    env.require(
+        "PLEX_CLAIM",
+        prompt="Plex Claim token"
+    )
+
+if 'cloudflared' in services:
+    env.require(
+        "CLOUDFLARE_TUNNEL_TOKEN",
+        prompt="Cloudflare Tunnel token"
+    )
 
 if not SSD_HDD_PATH_YES:
     print('Where would you like to keep your ssd app files?', end=' ')

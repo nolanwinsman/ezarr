@@ -141,8 +141,8 @@ if len(services_classed['torrent']) == 0 and len(services_classed['usenet']) == 
 print('\n===NETWORKING===')
 services_classed['networking'] = []
 
-print('Use Nginx Proxy Manager? [Y/n]', end=" ")
-take_input('nginx_proxy_manager', 'networking')
+#print('Use Nginx Proxy Manager? [Y/n]', end=" ")
+#take_input('nginx_proxy_manager', 'networking')
 
 print('Use Cloudflared Tunnel? [Y/n]', end=" ")
 take_input('cloudflared', 'networking')

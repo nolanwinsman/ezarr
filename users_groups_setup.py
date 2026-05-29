@@ -3,7 +3,7 @@ import subprocess
 
 
 # -----------------------------
-# Helpers (safe idempotent checks)
+# Helpers
 # -----------------------------
 def user_exists(username):
     return subprocess.run(
@@ -20,8 +20,10 @@ def group_exists(groupname):
         stderr=subprocess.DEVNULL
     ).returncode == 0
 
+
 def run(cmd):
     subprocess.run(cmd, check=True)
+
 
 def ensure_user(username, uid):
     if user_exists(username):
@@ -49,9 +51,12 @@ class UserGroupSetup:
         self.root_dir_ssd = root_dir_ssd
         self.root_dir_hdd = root_dir_hdd
 
-        ensure_group("mediacenter", 13000)
+        # NEW: proper permission separation
+        ensure_group("media_read", 13000)
+        ensure_group("media_write", 13001)
 
-        run(["sudo", "usermod", "-a", "-G", "mediacenter", os.getenv("USER")])
+        # add current user to write group (for management)
+        run(["sudo", "usermod", "-a", "-G", "media_write", os.getenv("USER")])
 
         media_root = f"{self.root_dir_hdd}/data"
 
@@ -66,158 +71,135 @@ class UserGroupSetup:
             f"{media_root}/torrents/complete",
         ])
 
-        # 🚨 IMPORTANT CHANGE:
-        # Only chown the root folder ONCE, NOT recursively
+        # Ownership: write group controls filesystem writes
         run([
             "sudo", "chown",
-            f"{os.getuid()}:mediacenter",
+            f"{os.getuid()}:media_write",
             media_root
         ])
+
     # -----------------------------
-    # Servarr
+    # ARR STACK (WRITE ACCESS)
     # -----------------------------
     def sonarr(self):
         ensure_user("sonarr", 13001)
 
         os.system(
-            f"sudo mkdir -pv {self.root_dir_hdd}/data/{{media,usenet,torrents}}/{{anime,cartoons,tv}} -m 775"
-            f" && sudo chown -R sonarr:mediacenter {self.root_dir_hdd}/data/{{media,usenet,torrents}}/{{anime,cartoons,tv}}"
+            "sudo usermod -a -G media_write sonarr"
         )
 
         self.create_config_dir("sonarr")
-        os.system("sudo usermod -a -G mediacenter sonarr")
 
     def radarr(self):
         ensure_user("radarr", 13002)
 
         os.system(
-            f"sudo mkdir -pv {self.root_dir_hdd}/data/{{media,usenet,torrents}}/{{anime_movies,cartoon_movies,documentaries,movies}} -m 775"
-            f" && sudo chown -R radarr:mediacenter {self.root_dir_hdd}/data/{{media,usenet,torrents}}/{{anime_movies,cartoon_movies,documentaries,movies}}"
+            "sudo usermod -a -G media_write radarr"
         )
 
         self.create_config_dir("radarr")
-        os.system("sudo usermod -a -G mediacenter radarr")
 
     def lidarr(self):
         ensure_user("lidarr", 13003)
 
         os.system(
-            f"sudo mkdir -pv {self.root_dir_hdd}/data/{{media,usenet,torrents}}/music -m 775"
-            f" && sudo chown -R lidarr:mediacenter {self.root_dir_hdd}/data/{{media,usenet,torrents}}/music"
+            "sudo usermod -a -G media_write lidarr"
         )
 
         self.create_config_dir("lidarr")
-        os.system("sudo usermod -a -G mediacenter lidarr")
 
     def readarr(self):
         ensure_user("readarr", 13004)
 
         os.system(
-            f"sudo mkdir -pv {self.root_dir_hdd}/data/{{media,usenet,torrents}}/books -m 775"
-            f" && sudo chown -R readarr:mediacenter {self.root_dir_hdd}/data/{{media,usenet,torrents}}/books"
+            "sudo usermod -a -G media_write readarr"
         )
 
         self.create_config_dir("readarr")
-        os.system("sudo usermod -a -G mediacenter readarr")
 
     def mylar3(self):
         ensure_user("mylar", 13005)
 
         os.system(
-            f"sudo mkdir -pv {self.root_dir_hdd}/data/{{media,usenet,torrents}}/comics -m 775"
-            f" && sudo chown -R mylar:mediacenter {self.root_dir_hdd}/data/{{media,usenet,torrents}}/comics"
+            "sudo usermod -a -G media_write mylar"
         )
 
         self.create_config_dir("mylar")
-        os.system("sudo usermod -a -G mediacenter mylar")
 
     # -----------------------------
-    # Indexers
+    # DOWNLOADERS (WRITE ACCESS)
     # -----------------------------
-    def prowlarr(self):
-        ensure_user("prowlarr", 13006)
-        self.create_config_dir("prowlarr")
-        os.system("sudo usermod -a -G mediacenter prowlarr")
-
     def qbittorrent(self):
         ensure_user("qbittorrent", 13007)
-        os.system("sudo usermod -a -G mediacenter qbittorrent")
-
-    def jackett(self):
-        ensure_user("jackett", 13008)
-        self.create_config_dir("jackett")
-        os.system("sudo usermod -a -G mediacenter jackett")
-
-    def overseerr(self):
-        ensure_user("overseerr", 13009)
-        self.create_config_dir("overseerr")
-        os.system("sudo usermod -a -G mediacenter overseerr")
-
-    # -----------------------------
-    # Media servers
-    # -----------------------------
-    def plex(self):
-        ensure_user("plex", 13010)
-        self.create_config_dir("plex")
-        os.system("sudo usermod -a -G mediacenter plex")
+        os.system("sudo usermod -a -G media_write qbittorrent")
 
     def sabnzbd(self):
         ensure_user("sabnzbd", 13011)
         self.create_config_dir("sabnzbd")
-        os.system("sudo usermod -a -G mediacenter sabnzbd")
+        os.system("sudo usermod -a -G media_write sabnzbd")
+
+    def unpackerr(self):
+        ensure_user("unpackerr", 13016)
+        self.create_config_dir("unpackerr")
+        os.system("sudo usermod -a -G media_write unpackerr")
+
+    # -----------------------------
+    # INDEXERS (NO MEDIA ACCESS)
+    # -----------------------------
+    def prowlarr(self):
+        ensure_user("prowlarr", 13006)
+        self.create_config_dir("prowlarr")
+
+    def jackett(self):
+        ensure_user("jackett", 13008)
+        self.create_config_dir("jackett")
+
+    # -----------------------------
+    # MEDIA SERVERS
+    # -----------------------------
+    def plex(self):
+        ensure_user("plex", 13010)
+        self.create_config_dir("plex")
+
+        # optional: read-only group if you use Plex too
+        os.system("sudo usermod -a -G media_read plex")
+
+    def jellyfin(self):
+        ensure_user("jellyfin", 13022)
+        self.create_config_dir("jellyfin")
+
+        # ONLY read access
+        os.system("sudo usermod -a -G media_read jellyfin")
 
     def jellyseerr(self):
         ensure_user("jellyseerr", 13012)
         self.create_config_dir("jellyseerr")
-        os.system("sudo usermod -a -G mediacenter jellyseerr")
+        # NO filesystem access required
+
+    def overseerr(self):
+        ensure_user("overseerr", 13009)
+        self.create_config_dir("overseerr")
 
     def bazarr(self):
         ensure_user("bazarr", 13013)
         self.create_config_dir("bazarr")
-        os.system("sudo usermod -a -G mediacenter bazarr")
+        os.system("sudo usermod -a -G media_write bazarr")
 
     def audiobookshelf(self):
         ensure_user("audiobookshelf", 13014)
 
         os.system(
             f"sudo mkdir -pv {self.root_dir_hdd}/data/media/{{audiobooks,podcasts,audiobookshelf-metadata}} -m 775"
-            f" && sudo chown -R audiobookshelf:mediacenter {self.root_dir_hdd}/data/media/{{audiobooks,podcasts,audiobookshelf-metadata}}"
         )
 
+        os.system("sudo usermod -a -G media_write audiobookshelf")
         self.create_config_dir("audiobookshelf")
-        os.system("sudo usermod -a -G mediacenter audiobookshelf")
 
-    def plextraktsync(self):
-        ensure_user("plextraktsync", 13015)
-        self.create_config_dir("plextraktsync")
-        os.system("sudo usermod -a -G mediacenter plextraktsync")
-
-    def unpackerr(self):
-        ensure_user("unpackerr", 13016)
-        self.create_config_dir("unpackerr")
-        os.system("sudo usermod -a -G mediacenter unpackerr")
-
-    def recyclarr(self):
-        ensure_user("recyclarr", 13017)
-
+    # -----------------------------
+    # CONFIG HELPERS
+    # -----------------------------
+    def create_config_dir(self, service_name):
         os.system(
-            f"sudo mkdir -p {self.root_dir_ssd}/config/recyclarr -m 775"
-            f" && sudo chown -R recyclarr:mediacenter {self.root_dir_ssd}/config/recyclarr"
-            f" && sudo chown $(id -u):mediacenter {self.root_dir_ssd}/config"
+            f"sudo mkdir -p {self.root_dir_ssd}/config/{service_name}-config -m 775"
+            f" && sudo chown -R {service_name}:media_write {self.root_dir_ssd}/config/{service_name}-config"
         )
-
-    def cleanuparr(self):
-        ensure_user("cleanuparr", 13018)
-        self.create_config_dir("cleanuparr")
-
-    def nginx_proxy_manager(self):
-        ensure_user("nginx-proxy-manager", 13019)
-        self.create_config_dir("nginx-proxy-manager")
-
-    def adguardhome(self):
-        ensure_user("adguardhome", 13020)
-        self.create_config_dir("adguardhome")
-
-    def cloudflared(self):
-        ensure_user("cloudflared", 13021)
-        self.create_config_dir("cloudflared")

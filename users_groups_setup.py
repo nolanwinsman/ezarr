@@ -5,6 +5,10 @@ import subprocess
 # -----------------------------
 # Helpers
 # -----------------------------
+def run(cmd):
+    subprocess.run(cmd, check=True)
+
+
 def user_exists(username):
     return subprocess.run(
         ["id", username],
@@ -21,42 +25,77 @@ def group_exists(groupname):
     ).returncode == 0
 
 
-def run(cmd):
-    subprocess.run(cmd, check=True)
-
-
-def ensure_user(username, uid):
-    #if user_exists(username):
-    #    print(f"[SKIP] user '{username}' already exists")
-    #    return
-
-    print(f"[CREATE] user '{username}' (uid {uid})")
-    os.system(f"sudo useradd {username} -u {uid}")
-
-
-def ensure_group(groupname, gid):
-    #if group_exists(groupname):
-    #    print(f"[SKIP] group '{groupname}' already exists")
-    #    return
-
-    print(f"[CREATE] group '{groupname}' (gid {gid})")
-    os.system(f"sudo groupadd -g {gid} {groupname}")
+def get_uid(username):
+    try:
+        return int(subprocess.check_output(["id", "-u", username]).decode().strip())
+    except:
+        return None
 
 
 # -----------------------------
-# Main class
+# User / Group Management
+# -----------------------------
+def ensure_user(username, uid):
+    current_uid = get_uid(username)
+
+    if current_uid is None:
+        print(f"[CREATE] user '{username}' (uid {uid})")
+        run(["sudo", "useradd", "-u", str(uid), username])
+        return
+
+    print(f"[SKIP] user '{username}' exists")
+
+    if current_uid != uid:
+        print(f"[MIGRATE] UID change {current_uid} → {uid}")
+
+        run(["sudo", "usermod", "-u", str(uid), username])
+
+        # FIX ownership of old UID files (SAFE scoped)
+        run([
+            "sudo", "find", "/mnt",
+            "-uid", str(current_uid),
+            "-exec", "chown", "-h", username, "{}", "+"
+        ])
+
+
+def ensure_group(groupname, gid):
+    existing = subprocess.run(
+        ["getent", "group", str(gid)],
+        capture_output=True,
+        text=True
+    ).stdout.strip()
+
+    if existing:
+        name = existing.split(":")[0]
+
+        if name != groupname:
+            raise Exception(f"GID {gid} already used by '{name}'")
+
+        print(f"[SKIP] group '{groupname}' exists")
+
+        run(["sudo", "groupmod", "-g", str(gid), groupname])
+
+    else:
+        print(f"[CREATE] group '{groupname}' (gid {gid})")
+        run(["sudo", "groupadd", "-g", str(gid), groupname])
+
+
+# -----------------------------
+# Main Class
 # -----------------------------
 class UserGroupSetup:
     def __init__(self, root_dir_ssd='/', root_dir_hdd='/'):
         self.root_dir_ssd = root_dir_ssd
         self.root_dir_hdd = root_dir_hdd
 
-        # NEW: proper permission separation
         ensure_group("media_read", 12999)
         ensure_group("media_write", 13000)
 
-        # add current user to write group (for management)
-        run(["sudo", "usermod", "-a", "-G", "media_write", os.getenv("USER")])
+        run([
+            "sudo", "usermod",
+            "-a", "-G", "media_write",
+            os.getenv("USER")
+        ])
 
         media_root = f"{self.root_dir_hdd}/data"
 
@@ -71,7 +110,6 @@ class UserGroupSetup:
             f"{media_root}/torrents/complete",
         ])
 
-        # Ownership: write group controls filesystem writes
         run([
             "sudo", "chown",
             f"{os.getuid()}:media_write",
@@ -79,72 +117,63 @@ class UserGroupSetup:
         ])
 
     # -----------------------------
-    # ARR STACK (WRITE ACCESS)
+    # Permission Helper (NEW)
+    # -----------------------------
+    def apply_media_access(self, user, access_type):
+        if access_type == "read":
+            run(["sudo", "usermod", "-a", "-G", "media_read", user])
+
+        elif access_type == "write":
+            run(["sudo", "usermod", "-a", "-G", "media_write", user])
+            run(["sudo", "usermod", "-a", "-G", "media_read", user])
+
+    # -----------------------------
+    # ARR STACK
     # -----------------------------
     def sonarr(self):
         ensure_user("sonarr", 13001)
-
-        os.system(
-            "sudo usermod -a -G media_write sonarr"
-        )
-
+        self.apply_media_access("sonarr", "write")
         self.create_config_dir("sonarr")
 
     def radarr(self):
         ensure_user("radarr", 13002)
-
-        os.system(
-            "sudo usermod -a -G media_write radarr"
-        )
-
+        self.apply_media_access("radarr", "write")
         self.create_config_dir("radarr")
 
     def lidarr(self):
         ensure_user("lidarr", 13003)
-
-        os.system(
-            "sudo usermod -a -G media_write lidarr"
-        )
-
+        self.apply_media_access("lidarr", "write")
         self.create_config_dir("lidarr")
 
     def readarr(self):
         ensure_user("readarr", 13004)
-
-        os.system(
-            "sudo usermod -a -G media_write readarr"
-        )
-
+        self.apply_media_access("readarr", "write")
         self.create_config_dir("readarr")
 
     def mylar3(self):
         ensure_user("mylar", 13005)
-
-        os.system(
-            "sudo usermod -a -G media_write mylar"
-        )
-
+        self.apply_media_access("mylar", "write")
         self.create_config_dir("mylar")
 
     # -----------------------------
-    # DOWNLOADERS (WRITE ACCESS)
+    # DOWNLOADERS
     # -----------------------------
     def qbittorrent(self):
         ensure_user("qbittorrent", 13007)
-        os.system("sudo usermod -a -G media_write qbittorrent")
+        self.apply_media_access("qbittorrent", "write")
 
     def sabnzbd(self):
         ensure_user("sabnzbd", 13011)
+        self.apply_media_access("sabnzbd", "write")
         self.create_config_dir("sabnzbd")
-        os.system("sudo usermod -a -G media_write sabnzbd")
 
     def unpackerr(self):
         ensure_user("unpackerr", 13016)
+        self.apply_media_access("unpackerr", "write")
         self.create_config_dir("unpackerr")
-        os.system("sudo usermod -a -G media_write unpackerr")
 
     # -----------------------------
-    # INDEXERS (NO MEDIA ACCESS)
+    # INDEXERS
     # -----------------------------
     def prowlarr(self):
         ensure_user("prowlarr", 13006)
@@ -159,22 +188,17 @@ class UserGroupSetup:
     # -----------------------------
     def plex(self):
         ensure_user("plex", 13010)
+        self.apply_media_access("plex", "read")
         self.create_config_dir("plex")
-
-        # optional: read-only group if you use Plex too
-        os.system("sudo usermod -a -G media_read plex")
 
     def jellyfin(self):
         ensure_user("jellyfin", 13022)
+        self.apply_media_access("jellyfin", "read")
         self.create_config_dir("jellyfin")
-
-        # ONLY read access
-        os.system("sudo usermod -a -G media_read jellyfin")
 
     def jellyseerr(self):
         ensure_user("jellyseerr", 13012)
         self.create_config_dir("jellyseerr")
-        # NO filesystem access required
 
     def overseerr(self):
         ensure_user("overseerr", 13009)
@@ -182,24 +206,32 @@ class UserGroupSetup:
 
     def bazarr(self):
         ensure_user("bazarr", 13013)
+        self.apply_media_access("bazarr", "write")
         self.create_config_dir("bazarr")
-        os.system("sudo usermod -a -G media_write bazarr")
 
     def audiobookshelf(self):
         ensure_user("audiobookshelf", 13014)
 
-        os.system(
-            f"sudo mkdir -pv {self.root_dir_hdd}/data/media/{{audiobooks,podcasts,audiobookshelf-metadata}} -m 775"
-        )
+        run([
+            "sudo", "mkdir", "-pv",
+            f"{self.root_dir_hdd}/data/media/audiobooks",
+            f"{self.root_dir_hdd}/data/media/podcasts"
+        ])
 
-        os.system("sudo usermod -a -G media_write audiobookshelf")
+        self.apply_media_access("audiobookshelf", "write")
         self.create_config_dir("audiobookshelf")
 
     # -----------------------------
-    # CONFIG HELPERS
+    # CONFIG
     # -----------------------------
     def create_config_dir(self, service_name):
-        os.system(
-            f"sudo mkdir -p {self.root_dir_ssd}/config/{service_name}-config -m 775"
-            f" && sudo chown -R {service_name}:media_write {self.root_dir_ssd}/config/{service_name}-config"
-        )
+        run([
+            "sudo", "mkdir", "-p",
+            f"{self.root_dir_ssd}/config/{service_name}-config"
+        ])
+
+        run([
+            "sudo", "chown",
+            f"{service_name}:media_write",
+            f"{self.root_dir_ssd}/config/{service_name}-config"
+        ])

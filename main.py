@@ -108,9 +108,9 @@ if services_classed['ms'].__contains__('plex'):
     take_input('tautulli', 'ms')
     print('Use PlexTraktSync ? [Y/n]', end=" ")
     take_input('plextraktsync', 'ms')
-    if services_classed['servarr'].__contains__('sonarr') or services_classed['servarr'].__contains__('radarr'):
-        print('Use Overseerr? [Y/n]', end=" ")
-        take_input('overseerr', 'servarr')
+    # if services_classed['servarr'].__contains__('sonarr') or services_classed['servarr'].__contains__('radarr'):
+    #    print('Use Overseerr? [Y/n]', end=" ")
+    #    take_input('overseerr', 'servarr')
 print('Use Jellyfin? [Y/n]', end=" ")
 take_input('jellyfin', 'ms')
 if (services_classed['ms'].__contains__('jellyfin')

@@ -52,8 +52,8 @@ class UserGroupSetup:
         self.root_dir_hdd = root_dir_hdd
 
         # NEW: proper permission separation
-        ensure_group("media_read", 13000)
-        ensure_group("media_write", 13001)
+        ensure_group("media_read", 12999)
+        ensure_group("media_write", 13000)
 
         # add current user to write group (for management)
         run(["sudo", "usermod", "-a", "-G", "media_write", os.getenv("USER")])

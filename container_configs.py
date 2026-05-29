@@ -93,7 +93,7 @@ class ContainerConfig:
             '      - TZ=' + self.timezone + '\n'
             '    volumes:\n'
             '      - ' + self.config_dir + '/jellyfin-config:/config\n'
-            '      - ' + self.root_dir_hdd + '/data/media:/data\n'
+            '      - ' + self.root_dir_hdd + '/data/media:/data:ro\n'
             '    ports:\n'
             '      - "8096:8096"\n'
             '    restart: unless-stopped\n\n'

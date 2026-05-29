@@ -20,6 +20,8 @@ def group_exists(groupname):
         stderr=subprocess.DEVNULL
     ).returncode == 0
 
+def run(cmd):
+    subprocess.run(cmd, check=True)
 
 def ensure_user(username, uid):
     if user_exists(username):

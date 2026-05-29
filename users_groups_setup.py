@@ -26,9 +26,9 @@ def run(cmd):
 
 
 def ensure_user(username, uid):
-    if user_exists(username):
-        print(f"[SKIP] user '{username}' already exists")
-        return
+    #if user_exists(username):
+    #    print(f"[SKIP] user '{username}' already exists")
+    #    return
 
     print(f"[CREATE] user '{username}' (uid {uid})")
     os.system(f"sudo useradd {username} -u {uid}")

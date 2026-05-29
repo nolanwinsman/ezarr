@@ -225,13 +225,21 @@ class UserGroupSetup:
     # CONFIG
     # -----------------------------
     def create_config_dir(self, service_name):
+        path = f"{self.root_dir_ssd}/config/{service_name}-config"
+
+        # 1. Always ensure folder exists
+        run(["sudo", "mkdir", "-p", path])
+
+        # 2. ALWAYS fix ownership (even if it already exists)
         run([
-            "sudo", "mkdir", "-p",
-            f"{self.root_dir_ssd}/config/{service_name}-config"
+            "sudo", "chown", "-R",
+            f"{service_name}:media_write",
+            path
         ])
 
+        # 3. Ensure safe permissions
         run([
-            "sudo", "chown",
-            f"{service_name}:media_write",
-            f"{self.root_dir_ssd}/config/{service_name}-config"
+            "sudo", "chmod", "-R",
+            "775",
+            path
         ])

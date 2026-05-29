@@ -35,9 +35,9 @@ def ensure_user(username, uid):
 
 
 def ensure_group(groupname, gid):
-    if group_exists(groupname):
-        print(f"[SKIP] group '{groupname}' already exists")
-        return
+    #if group_exists(groupname):
+    #    print(f"[SKIP] group '{groupname}' already exists")
+    #    return
 
     print(f"[CREATE] group '{groupname}' (gid {gid})")
     os.system(f"sudo groupadd -g {gid} {groupname}")

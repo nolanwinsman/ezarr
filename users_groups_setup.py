@@ -49,23 +49,28 @@ class UserGroupSetup:
 
         ensure_group("mediacenter", 13000)
 
-        os.system("sudo usermod -a -G mediacenter $USER")
+        run(["sudo", "usermod", "-a", "-G", "mediacenter", os.getenv("USER")])
 
-        os.system(
-            f"sudo mkdir -pv -m 775 "
-            f"{self.root_dir_hdd}/data/{{media,usenet,torrents}} "
-            f"{self.root_dir_hdd}/data/usenet/{{incomplete,complete}} "
-            f"{self.root_dir_hdd}/data/torrents/{{incomplete,complete}} "
-            f"&& sudo chown -R $(id -u):mediacenter {self.root_dir_hdd}/data"
-        )
+        media_root = f"{self.root_dir_hdd}/data"
 
-    def create_config_dir(self, service_name):
-        os.system(
-            f"sudo mkdir -p {self.root_dir_ssd}/config/{service_name}-config -m 775"
-            f" && sudo chown -R {service_name}:mediacenter {self.root_dir_ssd}/config/{service_name}-config"
-            f" && sudo chown $(id -u):mediacenter {self.root_dir_ssd}/config"
-        )
+        run([
+            "sudo", "mkdir", "-pv", "-m", "775",
+            f"{media_root}/media",
+            f"{media_root}/usenet",
+            f"{media_root}/torrents",
+            f"{media_root}/usenet/incomplete",
+            f"{media_root}/usenet/complete",
+            f"{media_root}/torrents/incomplete",
+            f"{media_root}/torrents/complete",
+        ])
 
+        # 🚨 IMPORTANT CHANGE:
+        # Only chown the root folder ONCE, NOT recursively
+        run([
+            "sudo", "chown",
+            f"{os.getuid()}:mediacenter",
+            media_root
+        ])
     # -----------------------------
     # Servarr
     # -----------------------------

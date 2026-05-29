@@ -34,6 +34,24 @@ When running the modified Python script, you will now specify:
 1. **SSD Directory**: A directory on your SSD for storing app configurations and files requiring faster access.
 2. **HDD Directory**: A directory on your HDD pool for larger files like media or downloads.
 
+## Permissions
+
+I updated the configuration directory setup so that it always reapplies correct ownership and permissions (using recursive chown/chmod) even if the folders and files already exist from previous EZarr runs, 
+ensuring that any legacy files created under older UID/GID or permission schemes are automatically corrected without requiring you to delete or recreate anything, which makes the script idempotent and safe to 
+re-run across different permission versions while keeping your existing Jellyfin and Arr data intact.
+
+For more info read [ezarr permission model](docs/ezarr_permission_model.md)
+
+## TODO
+
+update below code chunk to start ID at 13000 instead of 12999. Had to set it to 12999 because it got funky since I already ran the script before these permission updates and I don't want to delete my config files 
+and all my pre existing groups
+
+```py
+        ensure_group("media_read", 12999)
+        ensure_group("media_write", 13000)
+```
+
 # EZARR
 
 [![Check running](https://github.com/Luctia/ezarr/actions/workflows/check_running.yml/badge.svg)](https://github.com/Luctia/ezarr/actions/workflows/check_running.yml)

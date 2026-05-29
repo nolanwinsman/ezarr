@@ -2,7 +2,9 @@
 
 ### Overview
 
-This fork introduces changes to the **Python script only**, allowing support for two root directories. The shell scripts remain untouched and function as in the original repository. The modified Python script now lets you specify:
+This fork introduces changes to the **Python script only**, allowing support for two root directories. These modifications are very much made for my specific use case but some others might find it useful.
+
+The modified Python script now lets you specify:
 
 - **SSD Directory**: For storing configuration files and app data.
 - **HDD Directory**: For mass storage such as media and downloads.

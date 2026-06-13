@@ -102,12 +102,12 @@ take_input('flaresolverr', 'bypass')
 print('\n===MEDIA SERVERS===')
 services_classed['ms'] = []
 print('Use PleX? [Y/n]', end=" ")
-take_input('plex', 'ms')
-if services_classed['ms'].__contains__('plex'):
-    print('Use Tautulli? [Y/n]', end=" ")
-    take_input('tautulli', 'ms')
-    print('Use PlexTraktSync ? [Y/n]', end=" ")
-    take_input('plextraktsync', 'ms')
+# take_input('plex', 'ms')
+#if services_classed['ms'].__contains__('plex'):
+#    print('Use Tautulli? [Y/n]', end=" ")
+#    take_input('tautulli', 'ms')
+#    print('Use PlexTraktSync ? [Y/n]', end=" ")
+#    take_input('plextraktsync', 'ms')
     # if services_classed['servarr'].__contains__('sonarr') or services_classed['servarr'].__contains__('radarr'):
     #    print('Use Overseerr? [Y/n]', end=" ")
     #    take_input('overseerr', 'servarr')

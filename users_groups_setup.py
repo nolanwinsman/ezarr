@@ -200,6 +200,19 @@ class UserGroupSetup:
         ensure_user("jellyseerr", 13012)
         self.create_config_dir("jellyseerr")
 
+    def seerr(self):
+        path = f"{self.root_dir_ssd}/config/seerr-config"
+
+        run(["sudo", "mkdir", "-p", path])
+
+        # Seerr's container is hardcoded to run as UID 1000 (the `node` user)
+        # inside the image — it does not support PUID/PGID like other services.
+        # We chown directly to 1000:1000 rather than creating a dedicated
+        # system user, since UID 1000 is commonly already assigned to the
+        # primary host user on Debian/Ubuntu systems.
+        run(["sudo", "chown", "-R", "1000:1000", path])
+        run(["sudo", "chmod", "-R", "775", path])
+
     def overseerr(self):
         ensure_user("overseerr", 13009)
         self.create_config_dir("overseerr")
@@ -242,4 +255,36 @@ class UserGroupSetup:
             "sudo", "chmod", "-R",
             "775",
             path
+        ])
+
+    ## Creates the recycle directory that radarr and sonarr use
+    def create_recycle_dirs(self):
+        base = f"{self.root_dir_hdd}/data/recycle"
+
+        recycle_map = {
+            "tv": "tv",
+            "movies": "movies",
+            "anime": "anime",
+            "anime_movies": "anime_movies",
+            "cartoons": "cartoons",
+            "documentaries": "documentaries",
+            "music": "music",
+            "books": "books",
+            "comics": "comics",
+        }
+
+        for folder in recycle_map.values():
+            run(["sudo", "mkdir", "-pv", f"{base}/{folder}"])
+
+        # safe permissions: only arr stack should write here
+        run([
+            "sudo", "chown", "-R",
+            f":media_write",
+            base
+        ])
+
+        run([
+            "sudo", "chmod", "-R",
+            "775",
+            base
         ])

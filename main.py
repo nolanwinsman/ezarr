@@ -115,8 +115,11 @@ print('Use Jellyfin? [Y/n]', end=" ")
 take_input('jellyfin', 'ms')
 if (services_classed['ms'].__contains__('jellyfin')
         and (services_classed['servarr'].__contains__('sonarr') or services_classed['servarr'].__contains__('radarr'))):
-    print('Use Jellyseerr? [Y/n]', end=" ")
-    take_input('jellyseerr', 'servarr')
+    # print('Use Jellyseerr? [Y/n]', end=" ")
+    # take_input('jellyseerr', 'servarr')
+    print('Use seerr? [Y/n]', end=" ")
+    take_input('seerr', 'servarr')
+
 if len(services_classed['ms']) == 0:
     print('Warning: no media servers selected.')
 

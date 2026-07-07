@@ -353,6 +353,28 @@ class ContainerConfig:
             '    restart: unless-stopped\n\n'
         )
 
+    def seerr(self):
+        return (
+            '  seerr:\n'
+            '    image: ghcr.io/seerr-team/seerr:latest\n'
+            '    container_name: seerr\n'
+            '    init: true\n'
+            '    environment:\n'
+            '      - LOG_LEVEL=info\n'
+            '      - TZ=' + self.timezone + '\n'
+            '    volumes:\n'
+            '      - ' + self.config_dir + '/seerr-config:/app/config\n'
+            '    ports:\n'
+            '      - "5055:5055"\n'
+            '    healthcheck:\n'
+            '      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5055/api/v1/settings/public"]\n'
+            '      start_period: 20s\n'
+            '      timeout: 3s\n'
+            '      interval: 15s\n'
+            '      retries: 3\n'
+            '    restart: unless-stopped\n\n'
+        )
+
     def sabnzbd(self):
         return (
             '  sabnzbd:\n'

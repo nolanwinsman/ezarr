@@ -14,12 +14,12 @@ Also includes a few other small changes for my personal preference.
 ### What Changed?
 
 - **Python Script**: Modified to prompt for and handle two root directories during execution.
+- **Python Script**: Instead of one media group group, there's two groups `media_write` and `media_read` so that some containers have read only access for safety.
 - **Python Script**: Now creates an `anime_movies`, `cartoon_movies`, and `documentaries` folder with exact same permissions as the `movies` folder
 - **Python Script**: Now creates an `anime`, and `cartoons` folder with exact same permissions as the `tv` folder
 
 - **Python Script**: Default Location is America/Denver
 - **New Shell Script**: Created `absolute_update.sh` since a bad container made `update_containers.sh` not always work. `absolute_update.sh` should update everything except the bad container
-- **Shell Scripts**: No changes were made to the shell scripts, preserving compatibility with the original repository.
 
 ## Added/Modified Containers
 

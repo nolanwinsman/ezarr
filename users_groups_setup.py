@@ -108,6 +108,7 @@ class UserGroupSetup:
             f"{media_root}/usenet/complete",
             f"{media_root}/torrents/incomplete",
             f"{media_root}/torrents/complete",
+            f"{media_root}/media/other_videos",
         ])
 
         run([
@@ -268,6 +269,7 @@ class UserGroupSetup:
             "anime_movies": "anime_movies",
             "cartoons": "cartoons",
             "documentaries": "documentaries",
+            "other_videos": "other_videos",
             "music": "music",
             "books": "books",
             "comics": "comics",

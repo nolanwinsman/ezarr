@@ -79,12 +79,38 @@ def create_folders(root_dir_hdd):
     ])
 
 
+DEFAULT_ROOT_DIR_HDD = "/mnt/hdds"
+
+
+def take_directory_input():
+    while True:
+        ans = input().strip()
+
+        if ans == "":
+            print(f"Defaulted to {DEFAULT_ROOT_DIR_HDD}")
+            return DEFAULT_ROOT_DIR_HDD
+
+        if ans[0] == '/':
+            if ans[-1] == '/':
+                return ans[:-1]
+            return ans
+
+        print('Please make sure the path is absolute, meaning it starts at the root of your filesystem and starts with "/":', end=' ')
+
+
 if __name__ == "__main__":
     root_dir_hdd = os.environ.get("ROOT_DIR_HDD")
 
     if not root_dir_hdd:
-        print("Where would you like to keep your hdd media/download files?", end=" ")
-        root_dir_hdd = input().strip()
+        print(f"Default HDD/SSD paths to /mnt/hdds/ ? [Y/n]", end=" ")
+        use_default = input().strip().lower()
+
+        if use_default in ("", "y", "yes"):
+            root_dir_hdd = DEFAULT_ROOT_DIR_HDD
+            print(f"HDD Path Defaulted to {root_dir_hdd}")
+        else:
+            print("Where would you like to keep your hdd media/download files?", end=" ")
+            root_dir_hdd = take_directory_input()
 
     create_folders(root_dir_hdd)
     print("Folder structure created successfully.")
